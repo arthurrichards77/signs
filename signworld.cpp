@@ -1,9 +1,13 @@
 #include <iostream>
 #include <vector>
 
+//size of the world grid
+#define XMAX 10
+#define YMAX 10
+
 typedef unsigned long int ord;
 
-
+// class LOCATION ++++++++++++++++++++++++++++++++++++
 
 class Location {
   public:
@@ -28,74 +32,86 @@ Location::set_xy(ord x_in,ord y_in) {
     y=y_in;
 }
 
-
+// class WORLD ++++++++++++++++++++++++++++++++++++
 
 class World {
-    Location extreme;
   public:
-    World();
-    World(ord,ord);
+    bool occ[XMAX][YMAX] = {0};
+    void print();
 };
 
-World::World() {
-    extreme.set_xy(10,10);
+void World::print() {
+  ord xx,yy;
+  for (yy=0;yy<YMAX;yy++) {
+    for (xx=0;xx<XMAX;xx++) {
+      std::cout << occ[xx][yy];
+    }
+    std::cout << std::endl;
+  }
 }
 
-World::World(ord max_x, ord max_y) {
-    extreme.set_xy(max_x,max_y);
-}
-
-
+// class AGENT ++++++++++++++++++++++++++++++++++++
 
 class Agent {
+    World *p_par_wrl;
+  public:
     Location current_location;
     Location goal;
-  public:
-    Agent(ord,ord);
+    Agent();
+    Agent(World *,ord,ord);
     void set_goal(ord,ord);
-    void time_step(World);
+    void time_step();
 };
 
-Agent::Agent(ord x, ord y) {
+Agent::Agent() {}
+
+Agent::Agent(World *p_wrl,ord x, ord y) {
+    p_par_wrl = p_wrl;    
     current_location.set_xy(x,y);
+    (*p_wrl).occ[x][y] = true;
 }
 
 void Agent::set_goal(ord x, ord y){
     goal.set_xy(x,y);
 }
 
-void Agent::time_step(World w) {
+void Agent::time_step() {
     std::cout << "Agent at " << current_location.x << "," << current_location.y << 
       " heading to " << goal.x << "," << goal.y << std::endl;
 }
 
-
+// class MODEL ++++++++++++++++++++++++++++++++++++
 
 class Model {
+  public:
     World wrl;
     std::vector<Agent> agents;
-  public:
     void time_step();
-    void add_agent(Agent);
-    void set_limits(ord,ord);
+    Agent *add_agent(ord,ord);
 };
 
 void Model::time_step() {
   for (Agent a : agents) {
-    a.time_step(wrl);
+    a.time_step();
   }
 }
 
-void Model::add_agent(Agent a) {
+Agent *Model::add_agent(ord x,ord y) {
+  Agent a(&wrl,x,y);
   agents.push_back(a);
+  return(&a);
 }
 
-
+// MAIN ++++++++++++++++++++++++++++++++++++
 
 int main() {
   Model mdl;
-  mdl.add_agent(Agent(3,4));
-  mdl.add_agent(Agent(5,6));
+  Agent *a;
+  a = mdl.add_agent(3,4);
+  (*a).set_goal(7,8);
+  a = mdl.add_agent(5,6);
+  (*a).set_goal(9,10);
   mdl.time_step();
+  mdl.wrl.print();
   return(0);
 };
