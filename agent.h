@@ -16,6 +16,7 @@ class Agent {
     Location goal;
     Agent();
     Agent(World *,Location);
+    Agent(World *,Location,aid);
     Agent(World *,ord,ord);
     void set_goal(ord,ord);
     void update();
