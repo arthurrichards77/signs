@@ -1,0 +1,7 @@
+Recurring lists of goals, rather than single goal
+
+Scheme for scoring and recording rewards (are all trips considered of equal value?)
+
+Signposts
+
+Evolution
