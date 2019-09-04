@@ -8,9 +8,16 @@ World w(30,50);
 std::vector<Agent> agents;
 
 bool spawn_agent(ord x, ord y, ord gx, ord gy) {
+  // spawn agent with specified position and goal location
+  // returns false if failed because on top of another agent
   if (w.get_occ(x,y)) {
     return(false);
-  } else {
+  } 
+  // or if trying to spawn off the map
+  else if (!w.check_coords(x,y)) {
+     return(false);
+  }
+  else {
     agents.push_back(Agent(&w,Location(x,y),agents.size()));
     agents.back().set_goal(gx,gy);
     return(true);
@@ -23,6 +30,8 @@ int main() {
   unsigned long int ii;
   unsigned long int kk;
 
+  std::cout << w.get_xmax() << "," << w.get_ymax() << std::endl;
+
   for (ii=0;ii<4;ii++) {
     spawn_agent(15+ii,43,2,3*ii);
   }
@@ -32,7 +41,8 @@ int main() {
 
   for (kk=1;kk<=100;kk++) {
 
-    w.print();
+    w.update();
+    //w.print();
 
     // forward update
     for (ii=0;ii<agents.size();ii++) {
@@ -40,7 +50,8 @@ int main() {
       agents.at(ii).update();
     }
 
-    w.print();
+    w.update();
+    //w.print();
 
     // backward update
     for (ii=0;ii<agents.size();ii++) {

@@ -34,8 +34,10 @@ void Agent::set_goal(ord x, ord y){
 }
 
 void Agent::print() {
-    std::cout << "Agent " << id << " at " << current_location.x << "," << current_location.y << 
-      " heading to " << goal.x << "," << goal.y << std::endl;
+    // std::cout << "Time " << p_world->get_time() << " agent " << id << " at " << current_location.x << "," << current_location.y << 
+    //  " heading to " << goal.x << "," << goal.y << std::endl;
+    std::cout << p_world->get_time() << "," << id << "," << current_location.x << "," << current_location.y << 
+      "," << goal.x << "," << goal.y << std::endl;
 }
 
 bool Agent::valid_move(Location newloc) {

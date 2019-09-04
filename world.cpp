@@ -53,8 +53,12 @@ void Location::print() {
 // class WORLD ++++++++++++++++++++++++++++++++++++
 
 World::World(ord x, ord y) {
+  // size of the world
   xmax = x;
   ymax = y;
+  // time starts at zero
+  clock = 0;
+  // empty occupancy grid
   occ = (bool*) malloc(sizeof(bool)*xmax*ymax);
   memset(occ,false,sizeof(bool)*xmax*ymax);
 }
@@ -69,6 +73,10 @@ ord World::get_xmax() {
 
 ord World::get_ymax() {
   return(ymax);
+}
+
+ord World::get_time() {
+  return(clock);
 }
 
 bool World::check_coords(ord x, ord y) {
@@ -97,7 +105,7 @@ void World::free_occ(ord x, ord y) {
 
 void World::print() {
   ord xx,yy;
-  std::cout << "Occupancy map" << std::endl;
+  std::cout << "Occupancy map at time " << clock << std::endl;
   for (yy=0;yy<ymax;yy++) {
     for (xx=0;xx<xmax;xx++) {
       std::cout << get_occ(xx,yy);
@@ -107,4 +115,6 @@ void World::print() {
   std::cout << "End" << std::endl;
 }
 
-
+void World::update() {
+  clock++;
+}

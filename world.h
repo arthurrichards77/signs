@@ -22,11 +22,12 @@ class Location {
 // class WORLD ++++++++++++++++++++++++++++++++++++
 
 class World {
-    ord xmax,ymax;
+    ord xmax,ymax,clock;
     bool *occ;
   public:
     World(ord,ord);
     ~World();
+    ord get_time();
     ord get_xmax();
     ord get_ymax();
     bool check_coords(ord,ord);
@@ -35,6 +36,7 @@ class World {
     void take_occ(ord,ord);
     void free_occ(ord,ord);
     void print();
+    void update();
 };
 
 #endif
