@@ -33,8 +33,8 @@ def animate(i):
     ax1.axis('equal')
     ax1.plot([-1, 1+mapsize[0], 1+mapsize[0], -1, -1],[-1, -1, 1+mapsize[1], 1+mapsize[1], -1],'r-')
     for row in stepdata:
-      ax1.plot(row[2],row[3],cols[row[1]]+'.',row[4],row[5],cols[row[1]]+'+')
+      ax1.plot(row[2],row[3],cols[row[1]%7]+'.',row[4],row[5],cols[row[1]%7]+'+')
       hist = [r for r in resdata if r[1]==row[1] and r[0]<=i and r[0]>=i-5]
-      ax1.plot([hrow[2] for hrow in hist],[hrow[3] for hrow in hist],cols[row[1]]+'-')
-ani = animation.FuncAnimation(fig, animate, interval=300)
+      ax1.plot([hrow[2] for hrow in hist],[hrow[3] for hrow in hist],cols[row[1]%7]+'-')
+ani = animation.FuncAnimation(fig, animate, interval=30)
 plt.show()
