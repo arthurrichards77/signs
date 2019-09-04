@@ -33,5 +33,7 @@ int main() {
     agents.at(ii).print();
   }
 
+  agents.back().update();
+
   return(0);
 };

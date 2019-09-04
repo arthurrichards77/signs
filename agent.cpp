@@ -31,4 +31,29 @@ void Agent::print() {
       " heading to " << goal.x << "," << goal.y << std::endl;
 }
 
+bool Agent::valid_move(Location newloc) {
+    if (current_location.eq(newloc)) {
+      return(true);
+    }
+    if (!p_world->check_location(newloc)) {
+      return(false);
+    } 
+    if (p_world->get_occ(newloc.x,newloc.y)) {
+      return(false);
+    } 
+    return(true);
+} 
 
+void Agent::update() {
+    unsigned int mv;
+    float best_cost=1e9;
+    Location best_loc;
+    // try all moves
+    for (mv=0;mv<16;mv++) {
+      best_loc = current_location.decode_move(mv);
+      if (valid_move(best_loc)) {
+        best_loc.print();
+        std::cout << std::endl;
+      }
+    }
+}

@@ -13,6 +13,10 @@ class Location {
     Location();
     Location(ord,ord);
     void set_xy(ord,ord);
+    float distance(Location);
+    bool eq(Location);
+    Location decode_move(unsigned int);
+    void print();
 };
 
 // class WORLD ++++++++++++++++++++++++++++++++++++
@@ -23,7 +27,10 @@ class World {
   public:
     World(ord,ord);
     ~World();
-    void check_coords(ord,ord);
+    ord get_xmax();
+    ord get_ymax();
+    bool check_coords(ord,ord);
+    bool check_location(Location);
     bool get_occ(ord,ord);
     void take_occ(ord,ord);
     void free_occ(ord,ord);
