@@ -33,10 +33,16 @@ int main() {
   std::cout << w.get_xmax() << "," << w.get_ymax() << std::endl;
 
   for (ii=0;ii<4;ii++) {
-    spawn_agent(15+ii,43,2,3*ii);
+    if(spawn_agent(15+ii,43,2,3*ii)) {
+      //std::cout << "Agent " << agents.back().get_id() << " spawned" << std::endl;
+      agents.back().add_goal(17,17);
+    } 
   }
   for (ii=0;ii<4;ii++) {
-    spawn_agent(17+ii,43,1,3*ii);
+    if(spawn_agent(17+ii,43,1,3*ii)) {
+      //std::cout << "Agent " << agents.back().get_id() << " spawned" << std::endl;
+      agents.back().add_goal(17,17);
+    } 
   }
 
   for (kk=1;kk<=100;kk++) {

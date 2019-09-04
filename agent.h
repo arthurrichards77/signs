@@ -1,6 +1,8 @@
 #ifndef AGENT_H
 #define AGENT_H
 
+#include<vector>
+
 #include "world.h"
 
 // type def for agent ID
@@ -11,6 +13,8 @@ class Agent {
     aid id;
     void move(ord,ord);
     bool valid_move(Location);
+    std::vector<Location> goal_list;
+    int current_goal;
   public:
     Location current_location;
     Location goal;
@@ -18,7 +22,9 @@ class Agent {
     Agent(World *,Location);
     Agent(World *,Location,aid);
     Agent(World *,ord,ord);
+    aid get_id();
     void set_goal(ord,ord);
+    void add_goal(ord,ord);
     void update();
     void print();
 };

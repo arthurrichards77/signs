@@ -8,12 +8,14 @@ Agent::Agent(World *p_wrl,ord x, ord y) {
     p_world = p_wrl;    
     current_location.set_xy(x,y);
     p_world->take_occ(x,y);
+    current_goal=0;
 }
 
 Agent::Agent(World *p_wrl,Location loc) {
     p_world = p_wrl;    
     current_location.set_xy(loc.x,loc.y);
     p_world->take_occ(loc.x,loc.y);
+    current_goal=0;
 }
 
 Agent::Agent(World *p_wrl,Location loc,aid set_id) {
@@ -21,6 +23,11 @@ Agent::Agent(World *p_wrl,Location loc,aid set_id) {
     p_world = p_wrl;    
     current_location.set_xy(loc.x,loc.y);
     p_world->take_occ(loc.x,loc.y);
+    current_goal=0;
+}
+
+aid Agent::get_id(){
+    return(id);
 }
 
 void Agent::move(ord x, ord y){
@@ -30,7 +37,13 @@ void Agent::move(ord x, ord y){
 }
 
 void Agent::set_goal(ord x, ord y){
+    add_goal(x,y);
     goal.set_xy(x,y);
+    current_goal = goal_list.size()-1;
+}
+
+void Agent::add_goal(ord x, ord y){
+    goal_list.push_back(Location(x,y));
 }
 
 void Agent::print() {
@@ -86,4 +99,14 @@ void Agent::update() {
     }
     // execute the move
     move(best_loc.x,best_loc.y);
+    // have I reached my goal?
+    if (current_location.eq(goal)) {
+      //std::cout << "Agent " << id << " reached goal!" << std::endl;
+      // move on to next goal if there is one
+      if (goal_list.size()>1) {
+        current_goal++;
+        if (current_goal==goal_list.size()) current_goal=0;
+        goal.set_xy(goal_list.at(current_goal).x,goal_list.at(current_goal).y);
+      }
+    }
 }
