@@ -2,6 +2,8 @@
 #include "agent.h"
 #include <vector>
 #include <iostream>
+#include <stdio.h>
+
 
 World w(100,100);
 
@@ -147,13 +149,49 @@ void spawn_agents() {
 
 }
 
-void print_status() {
-  unsigned long int ii;
-  for (ii=0;ii<agents.size();ii++) {
-    agents.at(ii).print();
-  }
+int read_agents() {
+   FILE * pFile;
+   char buffer [100];
+   int parse_mode = 1;
+   char c;
+   ord px,py,gx,gy;
+
+   pFile = fopen ("setup.txt" , "r");
+   if (pFile == NULL) perror ("Error opening file");
+   else
+   {
+     while ( ! feof (pFile) )
+     {
+       if ( fgets (buffer , 100 , pFile) == NULL ) break;
+       sscanf(buffer,"%c,%lu,%lu",&c,&gx,&gy);
+       if (parse_mode==1) {
+         if (c=='A') {
+           px=gx;
+           py=gy;
+           parse_mode=2;
+         }         
+       } else if (parse_mode==2) {
+         if (c=='G') {
+           if(spawn_agent(px,py,gx,gy)) {
+             parse_mode=3;
+           } else {
+             parse_mode=1;
+           }
+         }
+       } else if (parse_mode==3) {
+         if (c=='G') {
+           agents.back().add_goal(gx,gy);
+         } else if (c=='A') {
+           px=gx;
+           py=gy;
+           parse_mode=2;           
+         }
+       }
+     }
+     fclose (pFile);
+   }
+   return 0;
 }
-  
 
 // MAIN ++++++++++++++++++++++++++++++++++++
 
@@ -161,9 +199,11 @@ int main() {
   unsigned long int kk;
   unsigned long int ii;
 
-  std::cout << w.get_xmax() << "," << w.get_ymax() << std::endl;
+  read_agents();
 
-  spawn_agents();
+  //spawn_agents();
+
+  std::cout << w.get_xmax() << "," << w.get_ymax() << std::endl;
 
   for (kk=1;kk<=500;kk++) {
 
