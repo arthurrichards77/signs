@@ -1,4 +1,6 @@
-Recurring lists of goals, rather than single goal
+Get scenario from simple file - use Python for clever scenario generation
+
+Way out of deadlocks
 
 Scheme for scoring and recording rewards (are all trips considered of equal value?)
 

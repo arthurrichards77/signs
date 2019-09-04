@@ -47,6 +47,7 @@ void Agent::add_goal(ord x, ord y){
 }
 
 void Agent::print() {
+    int jj;
     // std::cout << "Time " << p_world->get_time() << " agent " << id << " at " << current_location.x << "," << current_location.y << 
     //  " heading to " << goal.x << "," << goal.y << std::endl;
     std::cout << p_world->get_time() << "," << id << "," << current_location.x << "," << current_location.y << 
