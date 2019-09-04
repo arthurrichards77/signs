@@ -53,6 +53,17 @@ bool Agent::valid_move(Location newloc) {
     if (p_world->get_occ(newloc.x,newloc.y)) {
       return(false);
     } 
+    // prevent diagonal cutting across another agent
+    if (newloc.x!=current_location.x) {
+      if (p_world->get_occ(newloc.x,current_location.y)) {
+        return(false);
+      } 
+    }
+    if (newloc.y!=current_location.y) {
+      if (p_world->get_occ(current_location.x,newloc.y)) {
+        return(false);
+      } 
+    }
     return(true);
 } 
 
