@@ -48,6 +48,7 @@ bool World::get_occ(ord x, ord y) {
 
 void World::take_occ(ord x, ord y) {
   check_coords(x,y);
+  assert(!occ[x*ymax + y]);
   occ[x*ymax + y] = true;
 }
 

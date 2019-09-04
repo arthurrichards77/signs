@@ -13,7 +13,9 @@ class Agent {
     Location current_location;
     Location goal;
     Agent();
+    Agent(World *,Location);
     Agent(World *,ord,ord);
+    void move(ord,ord);
     void set_goal(ord,ord);
     void print();
 };
