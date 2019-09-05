@@ -11,3 +11,9 @@ world: world.cpp world.h
 
 clean:
 	rm *.o *.gch *.exe signworld
+
+setup:
+	python make_setup.py > setup.txt
+
+visualize:
+	python visualize.py result.csv

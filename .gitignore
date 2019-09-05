@@ -2,3 +2,4 @@
 *.o
 *.gch
 signworld
+result.csv
