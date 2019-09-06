@@ -24,6 +24,7 @@ class Sim {
 
 Sim::Sim() {
   clock = 0;
+  out_file = NULL;
 }
 
 FILE *Sim::open_output(char *file_name) {
@@ -128,15 +129,15 @@ aid Sim::reverse_update() {
 
 aid Sim::print_status() {
     aid ii;
-
-    for (ii=0;ii<agents.size();ii++) {
-      agents.at(ii).print();
-      fprintf(out_file,"%lu,%lu,%lu,%lu,%lu,%lu\n", clock, 
+    if (out_file!=NULL) {
+      for (ii=0;ii<agents.size();ii++) {
+        fprintf(out_file,"%lu,%lu,%lu,%lu,%lu,%lu\n", clock, 
                                      agents.at(ii).get_id(),
                                      agents.at(ii).current_location.x,
                                      agents.at(ii).current_location.y,
                                      agents.at(ii).goal.x,
                                      agents.at(ii).goal.y);
+      }
     }
     return(ii);
 }
@@ -153,11 +154,10 @@ int Sim::total_trips() {
 
 // MAIN ++++++++++++++++++++++++++++++++++++
 
-int main() {
+int main(int argc, char *argv[]) {
   Sim s;
 
-  char file_name[] = "result.csv";
-  FILE *pFile;
+  FILE *pFile = NULL;
 
   aid num_agents = 0;
 
@@ -166,20 +166,24 @@ int main() {
   num_agents = s.read_agents();
   std::cout << num_agents << " agents initialized" << std::endl;
 
-  pFile = s.open_output(file_name);
+  if (argc>1) {
+    pFile = s.open_output(argv[1]);
+  }
   if (pFile == NULL) {
-    std::cout << "Error opening output file." << std::endl;
-    return(1);
+    std::cout << "Error opening output file: sim won't be logged" << std::endl;
+  }
+  else {
+    std::cout << "Logging results to " << argv[1] << std::endl;
   }
 
   std::cout << "World is " << s.get_xmax() << "x" << s.get_ymax() << std::endl;
-  fprintf(pFile,"%lu,%lu\n", s.get_xmax(), s.get_ymax());
+  if (pFile!=NULL) fprintf(pFile,"%lu,%lu\n", s.get_xmax(), s.get_ymax());
 
   for (kk=0;kk<500;kk++) {
      s.forward_update();
-     //s.print_status();
+     s.print_status();
      s.reverse_update();
-     //s.print_status();
+     s.print_status();
   }
 
   std::cout << s.total_trips() << " trips completed overall" << std::endl;

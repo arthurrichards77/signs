@@ -2,4 +2,4 @@
 *.o
 *.gch
 signworld
-result.csv
+*.csv
