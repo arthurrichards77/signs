@@ -3,13 +3,13 @@
 
 #include<vector>
 
-#include "world.h"
+#include "map.h"
 
 // type def for agent ID
 typedef unsigned long int aid;
 
 class Agent {
-    World *p_world;
+    Map *p_map;
     aid id;
     void move(ord,ord);
     bool valid_move(Location);
@@ -19,9 +19,9 @@ class Agent {
     Location current_location;
     Location goal;
     Agent();
-    Agent(World *,Location);
-    Agent(World *,Location,aid);
-    Agent(World *,ord,ord);
+    Agent(Map *,Location);
+    Agent(Map *,Location,aid);
+    Agent(Map *,ord,ord);
     aid get_id();
     void set_goal(ord,ord);
     void add_goal(ord,ord);

@@ -1,13 +1,13 @@
 all: signworld
 
-signworld: signworld.cpp world agent
-	g++ -o signworld signworld.cpp agent.h world.h agent.o world.o
+signworld: signworld.cpp map agent
+	g++ -o signworld signworld.cpp agent.h map.h agent.o map.o
 
-agent: agent.cpp agent.h world
-	g++ -c agent.cpp agent.h world.h
+agent: agent.cpp agent.h map
+	g++ -c agent.cpp agent.h map.h
 
-world: world.cpp world.h
-	g++ -c world.cpp world.h
+map: map.cpp map.h
+	g++ -c map.cpp map.h
 
 clean:
 	rm *.o *.gch *.exe signworld

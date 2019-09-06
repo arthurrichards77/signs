@@ -1,10 +1,10 @@
-#include "world.h"
+#include "map.h"
 #include "agent.h"
 #include <vector>
 #include <iostream>
 #include <stdio.h>
 
-World w(256,256);
+Map m(256,256);
 
 std::vector<Agent> agents;
 
@@ -22,15 +22,15 @@ int d(ord x2, ord x1) {
 bool spawn_agent(ord x, ord y, ord gx, ord gy) {
   // spawn agent with specified position and goal location
   // returns false if failed because on top of another agent
-  if (!w.check_coords(x,y)) {
+  if (!m.check_coords(x,y)) {
      return(false);
   }
-  else if (w.get_occ(x,y)) {
+  else if (m.get_occ(x,y)) {
     return(false);
   } 
   // or if trying to spawn off the map
   else {
-    agents.push_back(Agent(&w,Location(x,y),agents.size()));
+    agents.push_back(Agent(&m,Location(x,y),agents.size()));
     agents.back().set_goal(gx,gy);
     return(true);
   }
@@ -92,40 +92,38 @@ int main() {
   pFile = fopen ("result.csv" , "w");
   if (pFile == NULL) return(1);
 
-  std::cout << w.get_xmax() << "," << w.get_ymax() << std::endl;
-  fprintf(pFile,"%lu,%lu\n", w.get_xmax(), w.get_ymax());
+  std::cout << m.get_xmax() << "," << m.get_ymax() << std::endl;
+  fprintf(pFile,"%lu,%lu\n", m.get_xmax(), m.get_ymax());
 
-  for (kk=1;kk<=500;kk++) {
-
-    w.update();
+  kk = 0;
+  while (kk<=500) {
 
     // forward update
     for (ii=0;ii<agents.size();ii++) {
       agents.at(ii).print();
       agents.at(ii).update();
-      fprintf(pFile,"%lu,%lu,%lu,%lu,%lu,%lu\n", w.get_time(), 
+      fprintf(pFile,"%lu,%lu,%lu,%lu,%lu,%lu\n", kk, 
                                      agents.at(ii).get_id(),
                                      agents.at(ii).current_location.x,
                                      agents.at(ii).current_location.y,
                                      agents.at(ii).goal.x,
                                      agents.at(ii).goal.y);
     }
-
-    w.update();
+    kk++;
 
     // backward update
     for (ii=0;ii<agents.size();ii++) {
       jj=agents.size()-1-ii;
       agents.at(jj).print();
       agents.at(jj).update();
-      fprintf(pFile,"%lu,%lu,%lu,%lu,%lu,%lu\n", w.get_time(), 
+      fprintf(pFile,"%lu,%lu,%lu,%lu,%lu,%lu\n", kk, 
                                      agents.at(jj).get_id(),
                                      agents.at(jj).current_location.x,
                                      agents.at(jj).current_location.y,
                                      agents.at(jj).goal.x,
                                      agents.at(jj).goal.y);
     }
-
+    kk++;
 
   }
 

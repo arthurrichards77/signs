@@ -1,5 +1,5 @@
-#ifndef WORLD_H
-#define WORLD_H
+#ifndef MAP_H
+#define MAP_H
 
 // type ORD +++++++++++++++++++++++++++++++++++
 
@@ -21,12 +21,12 @@ class Location {
 
 // class WORLD ++++++++++++++++++++++++++++++++++++
 
-class World {
+class Map {
     ord xmax,ymax,clock;
     bool *occ;
   public:
-    World(ord,ord);
-    ~World();
+    Map(ord,ord);
+    ~Map();
     ord get_time();
     ord get_xmax();
     ord get_ymax();

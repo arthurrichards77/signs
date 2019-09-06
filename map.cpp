@@ -1,4 +1,4 @@
-#include "world.h"
+#include "map.h"
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
@@ -50,10 +50,10 @@ void Location::print() {
     std::cout << "(" << x << "," << y << ")";
 }
 
-// class WORLD ++++++++++++++++++++++++++++++++++++
+// class Map ++++++++++++++++++++++++++++++++++++
 
-World::World(ord x, ord y) {
-  // size of the world
+Map::Map(ord x, ord y) {
+  // size of the Map
   xmax = x;
   ymax = y;
   // time starts at zero
@@ -63,47 +63,43 @@ World::World(ord x, ord y) {
   memset(occ,false,sizeof(bool)*xmax*ymax);
 }
 
-World::~World(){
+Map::~Map(){
   free (occ);
 }
 
-ord World::get_xmax() {
+ord Map::get_xmax() {
   return(xmax);
 }
 
-ord World::get_ymax() {
+ord Map::get_ymax() {
   return(ymax);
 }
 
-ord World::get_time() {
-  return(clock);
-}
-
-bool World::check_coords(ord x, ord y) {
+bool Map::check_coords(ord x, ord y) {
   return((x<xmax)&&(x>=0)&&(y<ymax)&&(y>=0));
 }
 
-bool World::check_location(Location loc) {
+bool Map::check_location(Location loc) {
   return(check_coords(loc.x,loc.y));
 }
 
-bool World::get_occ(ord x, ord y) {
+bool Map::get_occ(ord x, ord y) {
   assert(check_coords(x,y));
   return(occ[x*ymax + y]);
 }
 
-void World::take_occ(ord x, ord y) {
+void Map::take_occ(ord x, ord y) {
   assert(check_coords(x,y));
   assert(!occ[x*ymax + y]);
   occ[x*ymax + y] = true;
 }
 
-void World::free_occ(ord x, ord y) {
+void Map::free_occ(ord x, ord y) {
   assert(check_coords(x,y));
   occ[x*ymax + y] = false;
 }
 
-void World::print() {
+void Map::print() {
   ord xx,yy;
   std::cout << "Occupancy map at time " << clock << std::endl;
   for (yy=0;yy<ymax;yy++) {
@@ -113,8 +109,4 @@ void World::print() {
     std::cout << std::endl;
   }
   std::cout << "End" << std::endl;
-}
-
-void World::update() {
-  clock++;
 }
