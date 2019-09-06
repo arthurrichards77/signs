@@ -8,17 +8,6 @@ Map m(256,256);
 
 std::vector<Agent> agents;
 
-int d(ord x2, ord x1) {
-  int dx;
-  if (x2>x1) {
-    dx = x2-x1;
-  } else {
-    dx = x1-x2;
-    dx = -dx;
-  }   
-  return(dx);
-}
-
 bool spawn_agent(ord x, ord y, ord gx, ord gy) {
   // spawn agent with specified position and goal location
   // returns false if failed because on top of another agent

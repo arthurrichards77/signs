@@ -5,6 +5,17 @@
 #include <assert.h>
 #include <math.h>
 
+int d(ord x2, ord x1) {
+  int dx;
+  if (x2>x1) {
+    dx = x2-x1;
+  } else {
+    dx = x1-x2;
+    dx = -dx;
+  }   
+  return(dx);
+}
+
 // class LOCATION ++++++++++++++++++++++++++++++++++++
 
 Location::Location() {

@@ -5,6 +5,8 @@
 
 typedef unsigned long int ord;
 
+int d(ord, ord);
+
 // class LOCATION ++++++++++++++++++++++++++++++++++++
 
 class Location {
