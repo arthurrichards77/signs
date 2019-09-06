@@ -10,7 +10,7 @@ map: map.cpp map.h
 	g++ -c map.cpp map.h
 
 clean:
-	rm *.o *.gch *.exe signworld
+	rm *.o *.gch *.exe signworld setup.txt *.csv
 
 setup:
 	python make_setup.py > setup.txt
