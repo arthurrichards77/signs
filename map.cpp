@@ -63,15 +63,24 @@ void Location::print() {
 
 // class Map ++++++++++++++++++++++++++++++++++++
 
-Map::Map(ord x, ord y) {
+Map::Map() {
+  // zero size map if constructed empty
+  xmax = 0;
+  ymax = 0;
+  occ = NULL;
+}
+
+void Map::init_occ(ord x, ord y) {
   // size of the Map
   xmax = x;
   ymax = y;
-  // time starts at zero
-  clock = 0;
   // empty occupancy grid
   occ = (bool*) malloc(sizeof(bool)*xmax*ymax);
   memset(occ,false,sizeof(bool)*xmax*ymax);
+}
+
+Map::Map(ord x, ord y) {
+  init_occ(x,y);
 }
 
 Map::~Map(){

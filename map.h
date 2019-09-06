@@ -24,9 +24,11 @@ class Location {
 // class WORLD ++++++++++++++++++++++++++++++++++++
 
 class Map {
-    ord xmax,ymax,clock;
+    ord xmax,ymax;
     bool *occ;
   public:
+    Map();
+    void init_occ(ord,ord);
     Map(ord,ord);
     ~Map();
     ord get_time();

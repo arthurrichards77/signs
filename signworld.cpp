@@ -4,11 +4,33 @@
 #include <iostream>
 #include <stdio.h>
 
-Map m(256,256);
+class Sim {
+    unsigned long int clock;
+    Map m;
+    FILE *out_file;
+  public:
+    Sim();
+    std::vector<Agent> agents;
+    bool spawn_agent(ord,ord,ord,ord);
+    aid read_agents();
+    FILE *open_output(char *);
+    aid forward_update();
+    aid reverse_update();
+    aid print_status();
+    ord get_xmax();
+    ord get_ymax();
+};
 
-std::vector<Agent> agents;
+Sim::Sim() {
+  clock = 0;
+}
 
-bool spawn_agent(ord x, ord y, ord gx, ord gy) {
+FILE *Sim::open_output(char *file_name) {
+  out_file = fopen(file_name , "w");
+  return(out_file);
+}
+
+bool Sim::spawn_agent(ord x, ord y, ord gx, ord gy) {
   // spawn agent with specified position and goal location
   // returns false if failed because on top of another agent
   if (!m.check_coords(x,y)) {
@@ -25,12 +47,13 @@ bool spawn_agent(ord x, ord y, ord gx, ord gy) {
   }
 }
 
-int read_agents() {
+aid Sim::read_agents() {
    FILE * pFile;
    char buffer [100];
-   int parse_mode = 1;
+   int parse_mode = 0;
    char c;
    ord px,py,gx,gy;
+   aid num_agents = 0;
 
    pFile = fopen ("setup.txt" , "r");
    if (pFile == NULL) perror ("Error opening file");
@@ -40,7 +63,12 @@ int read_agents() {
      {
        if ( fgets (buffer , 100 , pFile) == NULL ) break;
        sscanf(buffer,"%c,%lu,%lu",&c,&gx,&gy);
-       if (parse_mode==1) {
+       if (parse_mode==0) {
+         if (c=='W') {
+           m.init_occ(gx,gy);
+           parse_mode=1;
+         }         
+       } else if (parse_mode==1) {
          if (c=='A') {
            px=gx;
            py=gy;
@@ -49,6 +77,7 @@ int read_agents() {
        } else if (parse_mode==2) {
          if (c=='G') {
            if(spawn_agent(px,py,gx,gy)) {
+             num_agents++;
              parse_mode=3;
            } else {
              parse_mode=1;
@@ -66,54 +95,80 @@ int read_agents() {
      }
      fclose (pFile);
    }
-   return 0;
+   return(num_agents);
 }
 
-// MAIN ++++++++++++++++++++++++++++++++++++
+ord Sim::get_xmax() {
+  return(m.get_xmax());
+}
 
-int main() {
-  FILE *pFile;
-  unsigned long int kk;
-  unsigned long int ii,jj;
+ord Sim::get_ymax() {
+  return(m.get_ymax());
+}
 
-  read_agents();
+aid Sim::forward_update() {
+    aid ii;
+    for (ii=0;ii<agents.size();ii++) {
+      agents.at(ii).update();
+    }
+    clock++;
+    return(ii);
+}
 
-  pFile = fopen ("result.csv" , "w");
-  if (pFile == NULL) return(1);
+aid Sim::reverse_update() {
+    aid ii,jj;
+    for (ii=0;ii<agents.size();ii++) {
+      jj=agents.size()-1-ii;
+      agents.at(jj).update();
+    }
+    clock++;
+    return(ii);
+}
 
-  std::cout << m.get_xmax() << "," << m.get_ymax() << std::endl;
-  fprintf(pFile,"%lu,%lu\n", m.get_xmax(), m.get_ymax());
+aid Sim::print_status() {
+    aid ii;
 
-  kk = 0;
-  while (kk<=500) {
-
-    // forward update
     for (ii=0;ii<agents.size();ii++) {
       agents.at(ii).print();
-      agents.at(ii).update();
-      fprintf(pFile,"%lu,%lu,%lu,%lu,%lu,%lu\n", kk, 
+      fprintf(out_file,"%lu,%lu,%lu,%lu,%lu,%lu\n", clock, 
                                      agents.at(ii).get_id(),
                                      agents.at(ii).current_location.x,
                                      agents.at(ii).current_location.y,
                                      agents.at(ii).goal.x,
                                      agents.at(ii).goal.y);
     }
-    kk++;
+    return(ii);
+}
 
-    // backward update
-    for (ii=0;ii<agents.size();ii++) {
-      jj=agents.size()-1-ii;
-      agents.at(jj).print();
-      agents.at(jj).update();
-      fprintf(pFile,"%lu,%lu,%lu,%lu,%lu,%lu\n", kk, 
-                                     agents.at(jj).get_id(),
-                                     agents.at(jj).current_location.x,
-                                     agents.at(jj).current_location.y,
-                                     agents.at(jj).goal.x,
-                                     agents.at(jj).goal.y);
-    }
-    kk++;
+// MAIN ++++++++++++++++++++++++++++++++++++
 
+int main() {
+  Sim s;
+
+  char file_name[] = "result.csv";
+  FILE *pFile;
+
+  aid num_agents = 0;
+
+  unsigned long int kk;
+
+  num_agents = s.read_agents();
+  std::cout << num_agents << " agents initialized" << std::endl;
+
+  pFile = s.open_output(file_name);
+  if (pFile == NULL) {
+    std::cout << "Error opening output file." << std::endl;
+    return(1);
+  }
+
+  std::cout << s.get_xmax() << "," << s.get_ymax() << std::endl;
+  fprintf(pFile,"%lu,%lu\n", s.get_xmax(), s.get_ymax());
+
+  for (kk=0;kk<500;kk++) {
+     s.forward_update();
+     s.print_status();
+     s.reverse_update();
+     s.print_status();
   }
 
   fclose(pFile);
