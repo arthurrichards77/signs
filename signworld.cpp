@@ -188,7 +188,7 @@ int main(int argc, char *argv[]) {
 
   std::cout << s.total_trips() << " trips completed overall" << std::endl;
 
-  fclose(pFile);
+  if (pFile!=NULL) fclose(pFile);
 
   return(0);
 };
