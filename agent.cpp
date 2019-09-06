@@ -9,6 +9,7 @@ Agent::Agent(Map *p_wrl,ord x, ord y) {
     current_location.set_xy(x,y);
     p_map->take_occ(x,y);
     current_goal=0;
+    num_trips=0;
 }
 
 Agent::Agent(Map *p_wrl,Location loc) {
@@ -16,6 +17,7 @@ Agent::Agent(Map *p_wrl,Location loc) {
     current_location.set_xy(loc.x,loc.y);
     p_map->take_occ(loc.x,loc.y);
     current_goal=0;
+    num_trips=0;
 }
 
 Agent::Agent(Map *p_wrl,Location loc,aid set_id) {
@@ -24,6 +26,7 @@ Agent::Agent(Map *p_wrl,Location loc,aid set_id) {
     current_location.set_xy(loc.x,loc.y);
     p_map->take_occ(loc.x,loc.y);
     current_goal=0;
+    num_trips=0;
 }
 
 aid Agent::get_id(){
@@ -49,7 +52,11 @@ void Agent::add_goal(ord x, ord y){
 void Agent::print() {
     int jj;
     std::cout << "Agent " << id << " at " << current_location.x << "," << current_location.y << 
-      " heading to " << goal.x << "," << goal.y << std::endl;
+      " heading to " << goal.x << "," << goal.y << " after " << num_trips << " trips completed" << std::endl;
+}
+
+int Agent:: get_num_trips() {
+    return(num_trips);
 }
 
 bool Agent::valid_move(Location newloc) {
@@ -104,6 +111,7 @@ void Agent::update() {
       //std::cout << "Agent " << id << " reached goal!" << std::endl;
       // move on to next goal if there is one
       if (goal_list.size()>1) {
+        num_trips++;
         current_goal++;
         if (current_goal==goal_list.size()) current_goal=0;
         goal.set_xy(goal_list.at(current_goal).x,goal_list.at(current_goal).y);

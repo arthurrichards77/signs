@@ -19,6 +19,7 @@ class Sim {
     aid print_status();
     ord get_xmax();
     ord get_ymax();
+    int total_trips();
 };
 
 Sim::Sim() {
@@ -140,6 +141,16 @@ aid Sim::print_status() {
     return(ii);
 }
 
+int Sim::total_trips() {
+    int ii,n=0;
+
+    for (ii=0;ii<agents.size();ii++) {
+      n+=agents.at(ii).get_num_trips();
+    }
+    return(n);
+}
+
+
 // MAIN ++++++++++++++++++++++++++++++++++++
 
 int main() {
@@ -161,15 +172,17 @@ int main() {
     return(1);
   }
 
-  std::cout << s.get_xmax() << "," << s.get_ymax() << std::endl;
+  std::cout << "World is " << s.get_xmax() << "x" << s.get_ymax() << std::endl;
   fprintf(pFile,"%lu,%lu\n", s.get_xmax(), s.get_ymax());
 
   for (kk=0;kk<500;kk++) {
      s.forward_update();
-     s.print_status();
+     //s.print_status();
      s.reverse_update();
-     s.print_status();
+     //s.print_status();
   }
+
+  std::cout << s.total_trips() << " trips completed overall" << std::endl;
 
   fclose(pFile);
 
