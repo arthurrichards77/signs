@@ -1,5 +1,6 @@
 #include "map.h"
 #include "agent.h"
+#include "sign.h"
 #include <vector>
 #include <iostream>
 #include <stdio.h>
@@ -25,6 +26,10 @@ class Sim {
 Sim::Sim() {
   clock = 0;
   out_file = NULL;
+  // playing: add a sign
+  m.add_sign(0,0,255,50,0,0,15,8);
+  m.add_sign(0,0,255,50,0,0,15,11);
+  m.add_sign(0,0,255,49,0,0,15,12);
 }
 
 FILE *Sim::open_output(char *file_name) {

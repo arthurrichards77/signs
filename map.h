@@ -1,6 +1,9 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <vector>
+#include "sign.h"
+
 // type ORD +++++++++++++++++++++++++++++++++++
 
 typedef unsigned long int ord;
@@ -21,11 +24,12 @@ class Location {
     void print();
 };
 
-// class WORLD ++++++++++++++++++++++++++++++++++++
+// class MAP ++++++++++++++++++++++++++++++++++++
 
 class Map {
     ord xmax,ymax;
     bool *occ;
+    std::vector<Sign> signs;
   public:
     Map();
     void init_occ(ord,ord);
@@ -41,6 +45,8 @@ class Map {
     void free_occ(ord,ord);
     void print();
     void update();
+    void add_sign(id,id,id,id,id,id,mv,mv);
+    bool check_move(id,id,id,mv);
 };
 
 #endif

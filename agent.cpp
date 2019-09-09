@@ -92,15 +92,17 @@ void Agent::update() {
     Location best_loc,new_loc;
     // try all moves
     for (mv=0;mv<16;mv++) {
-      new_loc = current_location.decode_move(mv);
-      if (valid_move(new_loc)) {
-        new_cost = new_loc.distance(goal);
-        if (!new_loc.eq(current_location)) new_cost-=0.5;
-        if (new_cost<best_cost) {
-          //new_loc.print();
-          //std::cout << " gives improved cost= " << new_cost << std::endl;
-          best_cost = new_cost;
-          best_loc = new_loc;
+      if (p_map->check_move(id,current_location.x,current_location.y,mv)) {
+        new_loc = current_location.decode_move(mv);
+        if (valid_move(new_loc)) {
+          new_cost = new_loc.distance(goal);
+          if (!new_loc.eq(current_location)) new_cost-=0.5;
+          if (new_cost<best_cost) {
+            //new_loc.print();
+            //std::cout << " gives improved cost= " << new_cost << std::endl;
+            best_cost = new_cost;
+            best_loc = new_loc;
+          }
         }
       }
     }

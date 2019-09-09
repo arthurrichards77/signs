@@ -1,7 +1,7 @@
 all: signworld
 
 signworld: signworld.cpp map agent sign
-	g++ -o signworld signworld.cpp agent.o map.o
+	g++ -o signworld signworld.cpp agent.o map.o sign.o
 
 agent: agent.cpp agent.h map
 	g++ -c agent.cpp

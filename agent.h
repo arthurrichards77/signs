@@ -1,9 +1,9 @@
 #ifndef AGENT_H
 #define AGENT_H
 
-#include<vector>
-
 #include "map.h"
+
+#include<vector>
 
 // type def for agent ID
 typedef unsigned long int aid;

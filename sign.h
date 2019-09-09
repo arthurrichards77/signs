@@ -1,24 +1,24 @@
 #ifndef SIGN_H
 #define SIGN_H
 
-#include "agent.h"
-#include "map.h"
+typedef unsigned long int id;
+typedef unsigned int mv;
 
 class Sign{
-    aid agent_and_mask;
-    aid agent_xor_mask;
-    ord xloc_and_mask;
-    ord xloc_xor_mask;
-    ord yloc_and_mask;
-    ord yloc_xor_mask;
-    unsigned int move_and_mask;
-    unsigned int move_xor_mask;
+    id agent_and_mask;
+    id agent_xor_mask;
+    id xloc_and_mask;
+    id xloc_xor_mask;
+    id yloc_and_mask;
+    id yloc_xor_mask;
+    mv move_and_mask;
+    mv move_xor_mask;
   public:
     Sign();
-    Sign(aid,aid,ord,ord,ord,ord);
-    bool applies(aid,ord,ord);
-    bool permits(unsigned int);
-    bool check_move(aid,ord,ord,unsigned int);
+    Sign(id,id,id,id,id,id,mv,mv);
+    bool applies(id,id,id);
+    bool permits(mv);
+    bool check_move(id,id,id,mv);
 };
 
 #endif

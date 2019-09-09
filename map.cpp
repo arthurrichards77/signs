@@ -130,3 +130,23 @@ void Map::print() {
   }
   std::cout << "End" << std::endl;
 }
+
+void Map::add_sign(id a1,id a2,id x1,id x2,id y1,id y2, mv m1, mv m2){
+  signs.push_back(Sign(a1,a2,x1,x2,y1,y2,m1,m2));
+}
+
+bool Map::check_move(id a,id x,id y,mv m) {
+  bool result;
+  int ii;
+
+  result = true;
+
+  for (ii=0; ii<signs.size(); ii++) {
+    if (!signs.at(ii).check_move(a,x,y,m)) {
+      result = false;
+      break;
+    }
+  }
+
+  return(result);
+}
