@@ -1,6 +1,6 @@
 all: signworld
 
-signworld: signworld.cpp map agent
+signworld: signworld.cpp map agent sign
 	g++ -o signworld signworld.cpp agent.h map.h agent.o map.o
 
 agent: agent.cpp agent.h map
@@ -8,6 +8,9 @@ agent: agent.cpp agent.h map
 
 map: map.cpp map.h
 	g++ -c map.cpp map.h
+
+sign: sign.cpp sign.h agent map
+	g++ -c sign.cpp sign.h agent.h map.h
 
 clean:
 	rm *.o *.gch *.exe signworld setup.txt *.csv

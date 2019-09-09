@@ -1,5 +1,6 @@
-Scheme for scoring and recording rewards (are all trips considered of equal value?)
-
 Signposts
+ - integrating
+ - testing
+ - gray code
 
 Evolution
