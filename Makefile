@@ -15,8 +15,15 @@ sign: sign.cpp sign.h agent map
 clean:
 	rm *.o *.gch *.exe signworld setup.txt *.csv
 
-setup:
-	python make_setup.py > setup.txt
+run: setup result visualize
 
 visualize:
 	python visualize.py result.csv
+
+result: signworld
+	./signworld result.csv
+
+setup: 
+	python make_setup.py > setup.txt
+
+
