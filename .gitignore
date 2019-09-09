@@ -4,3 +4,4 @@
 signworld
 *.csv
 setup.txt
+*.pyc
