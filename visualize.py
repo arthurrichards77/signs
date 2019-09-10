@@ -39,7 +39,8 @@ def animate(ii):
     ax1.plot([-1, 1+mapsize[0], 1+mapsize[0], -1, -1],[-1, -1, 1+mapsize[1], 1+mapsize[1], -1],'r-')
     for jj in range(num_agents):
       ax1.plot(agent_data[jj][ii][2],agent_data[jj][ii][3],cols[jj%7]+'.')
-      #hist = [r for r in resdata if r[1]==row[1] and r[0]<=i and r[0]>=i-5]
-      #ax1.plot([hrow[2] for hrow in hist],[hrow[3] for hrow in hist],cols[row[1]%7]+'-')
+      if ii>5:
+        ax1.plot([agent_data[jj][ih][2] for ih in range(ii-4,ii+1)],
+                 [agent_data[jj][ih][3] for ih in range(ii-4,ii+1)],cols[jj%7]+'-')
 ani = animation.FuncAnimation(fig, animate, interval=10)
 plt.show()
