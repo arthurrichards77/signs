@@ -46,13 +46,26 @@ Location Location::decode_move(unsigned int move_code) {
     nx = x;
     ny = y;
 
-    nx -= move_code & 0x01;
-    move_code = move_code >> 1;
-    nx += move_code & 0x01;
-    move_code = move_code >> 1;
-    ny -= move_code & 0x01;
-    move_code = move_code >> 1;
-    ny += move_code & 0x01;
+    // coding is:
+    // 0 | 1 | 2 -> +X
+    // ---------
+    // 7 |   | 3
+    // ---------
+    // 6 | 5 | 4
+    // 
+    // ^
+    // |
+    // +Y
+
+    if ((move_code&5)==0) ny+=1;
+    else if ((move_code&6)==0) ny+=1;
+    else if ((move_code&6)==4) ny+=-1;
+    else if ((move_code&5)==4) ny+=-1;
+
+    if ((move_code&6)==2) nx+=1;
+    else if (move_code==4) nx+=1;
+    else if ((move_code&6)==6) nx+=-1;
+    else if (move_code==0) nx+=-1;
 
     return(Location(nx,ny));
 }

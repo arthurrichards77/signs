@@ -88,12 +88,17 @@ bool Agent::valid_move(Location newloc) {
 
 void Agent::update() {
     unsigned int mv;
-    float best_cost=1e9,new_cost;
+    float best_cost,new_cost;
     Location best_loc,new_loc;
-    // try all moves
-    for (mv=0;mv<16;mv++) {
+    // start with staying put
+    best_loc = Location(current_location.x,current_location.y);
+    best_cost = current_location.distance(goal)+0.5; // slight penallty for not moving
+    // try all other moves
+    for (mv=0;mv<8;mv++) {
+      // first check against signs
       if (p_map->check_move(id,current_location.x,current_location.y,mv)) {
         new_loc = current_location.decode_move(mv);
+        // check against other agents and end of world
         if (valid_move(new_loc)) {
           new_cost = new_loc.distance(goal);
           if (!new_loc.eq(current_location)) new_cost-=0.5;

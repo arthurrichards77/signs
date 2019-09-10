@@ -26,10 +26,10 @@ class Sim {
 Sim::Sim() {
   clock = 0;
   out_file = NULL;
-  // playing: add a sign
-  m.add_sign(0,0,255,50,0,0,15,8);
-  m.add_sign(0,0,255,50,0,0,15,11);
-  m.add_sign(0,0,255,49,0,0,15,12);
+  // playing: add signs
+  m.add_sign(0,0,252,40,0,0,5,1);
+  //m.add_sign(0,0,255,50,0,0,15,11);
+  //m.add_sign(0,0,255,41,0,0,7,3);
 }
 
 FILE *Sim::open_output(char *file_name) {
