@@ -1,6 +1,5 @@
-Signposts
- - integrating
- - testing
- - gray code
+Separating sim and sign set classes
+
+Fast reset for simulation
 
 Evolution
