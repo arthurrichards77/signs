@@ -45,8 +45,8 @@ class Map {
     void free_occ(ord,ord);
     void print();
     void update();
-    void add_sign(id,id,id,id,id,id,mv,mv);
-    bool check_move(id,id,id,mv);
+    void add_sign(id,id,id,id,id,id,id,id,id,id,mv,mv);
+    bool check_move(id,id,id,id,id,mv);
 };
 
 #endif

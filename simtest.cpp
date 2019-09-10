@@ -1,5 +1,7 @@
 #include "sim.h"
 
+#include "gray.h"
+
 #include <iostream>
 #include <stdio.h>
 
@@ -16,9 +18,7 @@ int main(int argc, char *argv[]) {
   std::cout << num_agents << " agents initialized" << std::endl;
 
   // test - add signs
-  //s.add_sign(0,0,0,0,0,0,7,3);
-  s.add_sign(0,0,48,32,255,135,4,4);
-  s.add_sign(0,0,48,32,255,135,6,0);
+  s.add_sign(0,0,48,32,128,128,255,gray(50),255,gray(5),5,5);
 
   if (argc>1) {
     pFile = s.open_output(argv[1]);

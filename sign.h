@@ -11,14 +11,18 @@ class Sign{
     id xloc_xor_mask;
     id yloc_and_mask;
     id yloc_xor_mask;
+    id xdst_and_mask;
+    id xdst_xor_mask;
+    id ydst_and_mask;
+    id ydst_xor_mask;
     mv move_and_mask;
     mv move_xor_mask;
   public:
     Sign();
-    Sign(id,id,id,id,id,id,mv,mv);
-    bool applies(id,id,id);
+    Sign(id,id,id,id,id,id,id,id,id,id,mv,mv);
+    bool applies(id,id,id,id,id);
     bool permits(mv);
-    bool check_move(id,id,id,mv);
+    bool check_move(id,id,id,id,id,mv);
 };
 
 #endif

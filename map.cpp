@@ -144,18 +144,20 @@ void Map::print() {
   std::cout << "End" << std::endl;
 }
 
-void Map::add_sign(id a1,id a2,id x1,id x2,id y1,id y2, mv m1, mv m2){
-  signs.push_back(Sign(a1,a2,x1,x2,y1,y2,m1,m2));
+void Map::add_sign(id a1,id a2,id x1,id x2,id y1,id y2, 
+                               id xd1,id xd2,id yd1,id yd2,
+                               mv m1, mv m2){
+  signs.push_back(Sign(a1,a2,x1,x2,y1,y2,xd1,xd2,yd1,yd2,m1,m2));
 }
 
-bool Map::check_move(id a,id x,id y,mv m) {
+bool Map::check_move(id a, id x, id y, id xd, id yd, mv m) {
   bool result;
   int ii;
 
   result = true;
 
   for (ii=0; ii<signs.size(); ii++) {
-    if (!signs.at(ii).check_move(a,x,y,m)) {
+    if (!signs.at(ii).check_move(a,x,y,xd,yd,m)) {
       result = false;
       break;
     }

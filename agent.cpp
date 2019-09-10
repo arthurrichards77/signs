@@ -96,7 +96,10 @@ void Agent::update() {
     // try all other moves
     for (mv=0;mv<8;mv++) {
       // first check against signs
-      if (p_map->check_move(id,current_location.x,current_location.y,mv)) {
+      if (p_map->check_move(id,
+                            current_location.x,current_location.y,
+                            goal.x,goal.y, mv)
+                           ) {
         new_loc = current_location.decode_move(mv);
         // check against other agents and end of world
         if (valid_move(new_loc)) {
