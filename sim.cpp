@@ -1,35 +1,15 @@
-#include "map.h"
-#include "agent.h"
-#include "sign.h"
-#include <vector>
-#include <iostream>
-#include <stdio.h>
+#include "sim.h"
 
-class Sim {
-    unsigned long int clock;
-    Map m;
-    FILE *out_file;
-  public:
-    Sim();
-    std::vector<Agent> agents;
-    bool spawn_agent(ord,ord,ord,ord);
-    aid read_agents();
-    FILE *open_output(char *);
-    aid forward_update();
-    aid reverse_update();
-    aid print_status();
-    ord get_xmax();
-    ord get_ymax();
-    int total_trips();
-};
+#include "sign.h"
+#include <iostream>
 
 Sim::Sim() {
   clock = 0;
   out_file = NULL;
-  // playing: add signs
-  m.add_sign(0,0,252,40,0,0,5,1);
-  //m.add_sign(0,0,255,50,0,0,15,11);
-  //m.add_sign(0,0,255,41,0,0,7,3);
+}
+
+void Sim::add_sign(id a1,id a2,id x1,id x2,id y1,id y2, mv m1, mv m2){
+  m.add_sign(a1,a2,x1,x2,y1,y2,m1,m2);
 }
 
 FILE *Sim::open_output(char *file_name) {
@@ -155,45 +135,3 @@ int Sim::total_trips() {
     }
     return(n);
 }
-
-
-// MAIN ++++++++++++++++++++++++++++++++++++
-
-int main(int argc, char *argv[]) {
-  Sim s;
-
-  FILE *pFile = NULL;
-
-  aid num_agents = 0;
-
-  unsigned long int kk;
-
-  num_agents = s.read_agents();
-  std::cout << num_agents << " agents initialized" << std::endl;
-
-  if (argc>1) {
-    pFile = s.open_output(argv[1]);
-  }
-  if (pFile == NULL) {
-    std::cout << "Error opening output file: sim won't be logged" << std::endl;
-  }
-  else {
-    std::cout << "Logging results to " << argv[1] << std::endl;
-  }
-
-  std::cout << "World is " << s.get_xmax() << "x" << s.get_ymax() << std::endl;
-  if (pFile!=NULL) fprintf(pFile,"%lu,%lu\n", s.get_xmax(), s.get_ymax());
-
-  for (kk=0;kk<500;kk++) {
-     s.forward_update();
-     s.print_status();
-     s.reverse_update();
-     s.print_status();
-  }
-
-  std::cout << s.total_trips() << " trips completed overall" << std::endl;
-
-  if (pFile!=NULL) fclose(pFile);
-
-  return(0);
-};
