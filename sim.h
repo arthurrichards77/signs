@@ -23,7 +23,7 @@ class Sim {
     ord get_xmax();
     ord get_ymax();
     int total_trips();
-    void add_sign(aid,aid,ord,ord,ord,ord,ord,ord,ord,ord,mv,mv);
+    void add_sign(Sign);
 };
 
 #endif

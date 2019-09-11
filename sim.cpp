@@ -8,11 +8,8 @@ Sim::Sim() {
   out_file = NULL;
 }
 
-void Sim::add_sign(aid a1,aid a2,
-                   ord x1,ord x2,ord y1,ord y2, 
-                   ord xd1,ord xd2,ord yd1,ord yd2, 
-                   mv m1, mv m2){
-  m.add_sign(a1,a2,x1,x2,y1,y2,xd1,xd2,yd1,yd2,m1,m2);
+void Sim::add_sign(Sign s){
+  m.add_sign(s);
 }
 
 FILE *Sim::open_output(char *file_name) {

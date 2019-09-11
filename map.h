@@ -41,7 +41,7 @@ class Map {
     void free_occ(ord,ord);
     void print();
     void update();
-    void add_sign(aid,aid,ord,ord,ord,ord,ord,ord,ord,ord,mv,mv);
+    void add_sign(Sign);
     bool check_move(aid,ord,ord,ord,ord,mv);
 };
 

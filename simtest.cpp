@@ -1,5 +1,7 @@
 #include "sim.h"
 
+#include "sign.h"
+
 #include "gray.h"
 
 #include <iostream>
@@ -18,7 +20,8 @@ int main(int argc, char *argv[]) {
   std::cout << num_agents << " agents initialized" << std::endl;
 
   // test - add signs
-  s.add_sign(0,0,48,32,128,128,255,gray(50),255,gray(5),5,5);
+  Sign sn(Mask<aid>(0,0),Mask<ord>(48,32),Mask<ord>(128,128),Mask<ord>(255,gray(50)),Mask<ord>(255,gray(5)),Mask<mv>(5,5));
+  s.add_sign(sn);
 
   if (argc>1) {
     pFile = s.open_output(argv[1]);

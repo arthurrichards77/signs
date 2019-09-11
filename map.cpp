@@ -144,10 +144,8 @@ void Map::print() {
   std::cout << "End" << std::endl;
 }
 
-void Map::add_sign(aid a1,aid a2,ord x1,ord x2,ord y1,ord y2, 
-                               ord xd1,ord xd2,ord yd1,ord yd2,
-                               mv m1, mv m2){
-  signs.push_back(Sign(a1,a2,x1,x2,y1,y2,xd1,xd2,yd1,yd2,m1,m2));
+void Map::add_sign(Sign s){
+  signs.push_back(s);
 }
 
 bool Map::check_move(aid a, ord x, ord y, ord xd, ord yd, mv m) {
