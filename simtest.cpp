@@ -9,11 +9,9 @@
 
 int main(int argc, char *argv[]) {
   Sim s;
-  FILE *pFile = NULL;
-  aid num_agents = 0;
 
   // read agent settings
-  num_agents = s.read_agents();
+  aid num_agents = s.read_agents();
   std::cout << num_agents << " agents initialized" << std::endl;
 
   // test - add signs
@@ -24,6 +22,7 @@ int main(int argc, char *argv[]) {
           Mask<mv>(6,0));
   s.add_sign(sn);
 
+  FILE *pFile = NULL;
   if (argc>1) {
     pFile = s.open_output(argv[1]);
   }

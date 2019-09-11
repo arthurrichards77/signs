@@ -1,4 +1,7 @@
-all: simtest graytest
+all: simtest graytest evo
+
+evo: evo.cpp map agent sign sim gray
+	g++ -o evo evo.cpp sign.o gray.o map.o sim.o agent.o
 
 simtest: simtest.cpp map agent sign sim gray
 	g++ -o simtest simtest.cpp agent.o map.o sign.o gray.o sim.o
@@ -22,7 +25,7 @@ gray: gray.c gray.h
 	g++ -c gray.c
 
 clean:
-	rm *.o *.gch *.exe simtest graytest setup.txt *.csv
+	rm *.o simtest graytest evo setup.txt *.csv
 
 visualize:
 	python visualize.py result.csv

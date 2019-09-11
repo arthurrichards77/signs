@@ -43,7 +43,7 @@ aid Sim::read_agents() {
    aid num_agents = 0;
 
    pFile = fopen ("setup.txt" , "r");
-   if (pFile == NULL) perror ("Error opening file");
+   if (pFile == NULL) perror ("Error opening setup.txt");
    else
    {
      while ( ! feof (pFile) )

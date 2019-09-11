@@ -45,6 +45,7 @@ class Sign{
     bool applies(aid,ord,ord,ord,ord);
     bool permits(mv);
     bool check_move(aid,ord,ord,ord,ord,mv);
+    
 };
 
 #endif
