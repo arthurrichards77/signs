@@ -1,6 +1,7 @@
 #ifndef SIM_H
 #define SIM_H
 
+#include "types.h"
 #include "map.h"
 #include "agent.h"
 #include <vector>
@@ -22,7 +23,7 @@ class Sim {
     ord get_xmax();
     ord get_ymax();
     int total_trips();
-    void add_sign(id,id,id,id,id,id,id,id,id,id,mv,mv);
+    void add_sign(aid,aid,ord,ord,ord,ord,ord,ord,ord,ord,mv,mv);
 };
 
 #endif

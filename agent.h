@@ -2,11 +2,9 @@
 #define AGENT_H
 
 #include "map.h"
+#include "types.h"
 
 #include<vector>
-
-// type def for agent ID
-typedef unsigned long int aid;
 
 class Agent {
     Map *p_map;

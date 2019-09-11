@@ -1,7 +1,6 @@
-*.exe
 *.o
-*.gch
-signworld
 *.csv
 setup.txt
 *.pyc
+simtest
+graytest

@@ -1,28 +1,27 @@
 #ifndef SIGN_H
 #define SIGN_H
 
-typedef unsigned long int id;
-typedef unsigned int mv;
+#include "types.h"
 
 class Sign{
-    id agent_and_mask;
-    id agent_xor_mask;
-    id xloc_and_mask;
-    id xloc_xor_mask;
-    id yloc_and_mask;
-    id yloc_xor_mask;
-    id xdst_and_mask;
-    id xdst_xor_mask;
-    id ydst_and_mask;
-    id ydst_xor_mask;
+    aid agent_and_mask;
+    aid agent_xor_mask;
+    ord xloc_and_mask;
+    ord xloc_xor_mask;
+    ord yloc_and_mask;
+    ord yloc_xor_mask;
+    ord xdst_and_mask;
+    ord xdst_xor_mask;
+    ord ydst_and_mask;
+    ord ydst_xor_mask;
     mv move_and_mask;
     mv move_xor_mask;
   public:
     Sign();
-    Sign(id,id,id,id,id,id,id,id,id,id,mv,mv);
-    bool applies(id,id,id,id,id);
+    Sign(aid,aid,ord,ord,ord,ord,ord,ord,ord,ord,mv,mv);
+    bool applies(aid,ord,ord,ord,ord);
     bool permits(mv);
-    bool check_move(id,id,id,id,id,mv);
+    bool check_move(aid,ord,ord,ord,ord,mv);
 };
 
 #endif

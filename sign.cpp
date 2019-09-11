@@ -16,7 +16,7 @@ Sign::Sign() {
   ydst_xor_mask = 1;
 }
 
-Sign::Sign(id a1,id a2,id x1,id x2,id y1,id y2,id xd1,id xd2,id yd1,id yd2, mv m1, mv m2){
+Sign::Sign(aid a1,aid a2,ord x1,ord x2,ord y1,ord y2,ord xd1,ord xd2,ord yd1,ord yd2, mv m1, mv m2){
   agent_and_mask = a1;
   agent_xor_mask = a2;
   xloc_and_mask = x1;
@@ -31,7 +31,7 @@ Sign::Sign(id a1,id a2,id x1,id x2,id y1,id y2,id xd1,id xd2,id yd1,id yd2, mv m
   move_xor_mask = m2;
 }
 
-bool Sign::applies(id a,id x,id y,id xd,id yd) {
+bool Sign::applies(aid a,ord x,ord y,ord xd,ord yd) {
   bool result = false;
   if (((gray(a)&agent_and_mask)^agent_xor_mask)==0)
     if (((gray(x)&xloc_and_mask)^xloc_xor_mask)==0)
@@ -51,7 +51,7 @@ bool Sign::permits(mv m) {
   return(result);
 };
 
-bool Sign::check_move(id a, id x, id y, id xd, id yd, mv m) {
+bool Sign::check_move(aid a, ord x, ord y, ord xd, ord yd, mv m) {
   bool result = true;
   if (applies(a,x,y,xd,yd)) result = permits(m);
   if (!result) {

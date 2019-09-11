@@ -3,10 +3,7 @@
 
 #include <vector>
 #include "sign.h"
-
-// type ORD +++++++++++++++++++++++++++++++++++
-
-typedef unsigned long int ord;
+#include "types.h"
 
 int d(ord, ord);
 
@@ -35,7 +32,6 @@ class Map {
     void init_occ(ord,ord);
     Map(ord,ord);
     ~Map();
-    ord get_time();
     ord get_xmax();
     ord get_ymax();
     bool check_coords(ord,ord);
@@ -45,8 +41,8 @@ class Map {
     void free_occ(ord,ord);
     void print();
     void update();
-    void add_sign(id,id,id,id,id,id,id,id,id,id,mv,mv);
-    bool check_move(id,id,id,id,id,mv);
+    void add_sign(aid,aid,ord,ord,ord,ord,ord,ord,ord,ord,mv,mv);
+    bool check_move(aid,ord,ord,ord,ord,mv);
 };
 
 #endif
