@@ -3,6 +3,7 @@
 #include "sim.h"
 
 #include <vector>
+#include <algorithm>
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
@@ -10,10 +11,28 @@
 typedef std::vector<Sign> signset;
 
 // population size
-const unsigned int pop_size(10);
+const unsigned int pop_size=50;
 
 // lazy: keep population in a global
 signset *pop[pop_size];
+
+// storage of fitness evaluations
+typedef struct {
+  unsigned int id;
+  unsigned long int fitness; 
+} evaluation;
+std::vector<evaluation> evals;
+
+// ***** UTILITIES *****
+
+bool random_choice(float prob_true) {
+  bool res = false;
+  float r = rand();
+  if (r<(RAND_MAX*prob_true)) res=true;
+  return(res);
+}
+
+// ***** INDIVIDUAL STUFF *****
 
 unsigned long int eval(signset *st, unsigned long int num_steps) {
 
@@ -29,6 +48,13 @@ unsigned long int eval(signset *st, unsigned long int num_steps) {
   s.run(num_steps);
   return(s.total_trips());
 
+}
+
+void print_signs(signset *st) {
+  int ii;
+  for (ii=0;ii<st->size();ii++) {
+    st->at(ii).print();
+  }
 }
 
 void add_random_sign(signset *st, aid amax, ord xmax, ord ymax) {
@@ -49,8 +75,34 @@ void add_random_sign(signset *st, aid amax, ord xmax, ord ymax) {
                     Mask<ord>(xd1,xd2),Mask<ord>(yd1,yd2),
                     Mask<mv>(m1,m2)
                    )
-              ); 
+               ); 
 }
+
+void drop_random_sign(signset *st) {
+  int r;
+  if (st->size()>0) {
+    r = rand() % st->size();
+    st->erase(st->begin()+r);
+  }
+}
+
+void copy_half_signs(signset *ch, signset *pa) {
+  unsigned int ii;
+  for (ii=0;ii<pa->size();ii++) {
+    if (random_choice(0.5)) {
+      ch->push_back(pa->at(ii)); 
+    }
+  }
+}
+
+void crossover(signset *ch, signset *p1, signset *p2) {
+  // wipe the child signs
+  ch->clear();
+  copy_half_signs(ch,p1);
+  copy_half_signs(ch,p2);
+}
+
+// ***** POPULATION STUFF
 
 void init_pop() {
 
@@ -66,17 +118,59 @@ void init_pop() {
 
 }
 
-void eval_pop() {
-  unsigned long int res;
+bool comp (evaluation e1, evaluation e2) {
+  return (e1.fitness>e2.fitness);
+}
 
+void eval_pop() {
+  evaluation e;
   unsigned int ii;
+
+  evals.clear();
   for (ii=0;ii<pop_size;ii++) {
     std::cout << "Member " << ii << " has " << pop[ii]->size() << " signs" << std::endl;
-    res = eval(pop[ii],500);
-    std::cout << "Member " << ii << " scores " << res << std::endl;
+    e.id = ii;
+    e.fitness = eval(pop[ii],500);
+    std::cout << "Member " << ii << " scores " << e.fitness << std::endl;
+    // store for sorting
+    evals.push_back(e);
+  }
+  std::sort(evals.begin(),evals.end(),comp);
+  for (ii=0;ii<pop_size;ii++) {
+    std::cout << "Place " << ii+1 << " is member " << evals.at(ii).id << " with fitness " << evals.at(ii).fitness << std::endl;
   }
 
 }
+
+void breed_pop() {
+  int keepers = 20;
+  int p1,p2,ii;
+
+  for (ii=keepers;ii<pop_size;ii++) {
+    p1 = rand() % (keepers-1);
+    p2 = p1 + 1 + (rand() % (keepers-p1-1));
+    std::cout << "Replacing " << evals[ii].id << " with child of " 
+              << evals[p1].id << " and " << evals[p2].id << std::endl; 
+    crossover(pop[evals[ii].id],pop[evals[p1].id],pop[evals[p2].id]);
+  }
+}
+
+void mutate_pop() {
+
+  unsigned int ii;
+  for (ii=0;ii<pop_size;ii++) {
+    if (random_choice(0.2)) {
+      std::cout << "Adding random sign to member " << ii << std::endl; 
+      add_random_sign(pop[ii],256,128,128);
+    }
+    if (random_choice(0.2)) {
+      std::cout << "Dropping random sign from member " << ii << std::endl; 
+      drop_random_sign(pop[ii]);
+    }
+  }
+}
+
+// ***** MAIN LOOP
 
 int main() {
 
@@ -85,13 +179,14 @@ int main() {
   srand(time(NULL));
 
   init_pop();
+  eval_pop();
 
-  for (gg=0;gg<1;gg++) {
-
+  for (gg=0;gg<500;gg++) {
+    std::cout << "GENERATION " << gg << std::endl;
+    print_signs(pop[evals.front().id]);
+    breed_pop();
+    mutate_pop();
     eval_pop();
-    //select_pop();
-    //crossover_pop();
-    //mutate_pop();
 
   }
 

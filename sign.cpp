@@ -12,6 +12,16 @@ Sign::Sign(Mask <aid> a,Mask <ord> x,Mask <ord> y,Mask <ord> xd,Mask <ord> yd,Ma
   move_mask = m;
 }
 
+void Sign::print() {
+  std::cout << "(" << agent_mask.get_and() << "," << agent_mask.get_xor() << ") ";
+  std::cout << "(" << xloc_mask.get_and() << "," << xloc_mask.get_xor() << ") ";
+  std::cout << "(" << yloc_mask.get_and() << "," << yloc_mask.get_xor() << ") ";
+  std::cout << "(" << xdst_mask.get_and() << "," << xdst_mask.get_xor() << ") ";
+  std::cout << "(" << ydst_mask.get_and() << "," << ydst_mask.get_xor() << ") ";
+  std::cout << "(" << move_mask.get_and() << "," << move_mask.get_xor() << ") ";
+  std::cout << std::endl;
+}
+
 bool Sign::applies(aid a,ord x,ord y,ord xd,ord yd) {
   bool result = false;
   if (agent_mask.match(a))

@@ -11,6 +11,8 @@ class Mask {
   public:
     Mask ();
     Mask (T, T);
+    T get_xor();
+    T get_and();
     bool match(T);
 };
 
@@ -24,6 +26,15 @@ template <class T>
 Mask<T>::Mask () {
   and_mask = 0;
   xor_mask = 1;
+}
+
+template <class T>
+T Mask<T>::get_xor () {
+  return(xor_mask);
+}
+template <class T>
+T Mask<T>::get_and () {
+  return(and_mask);
 }
 
 template <class T>
@@ -45,7 +56,7 @@ class Sign{
     bool applies(aid,ord,ord,ord,ord);
     bool permits(mv);
     bool check_move(aid,ord,ord,ord,ord,mv);
-    
+    void print();
 };
 
 #endif
