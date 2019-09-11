@@ -3,6 +3,8 @@
 #include "gray.h"
 #include <iostream>
 
+#include <stdlib.h>
+
 Sign::Sign(Mask <aid> a,Mask <ord> x,Mask <ord> y,Mask <ord> xd,Mask <ord> yd,Mask <mv> m){
   agent_mask = a;
   xloc_mask = x;
@@ -10,6 +12,16 @@ Sign::Sign(Mask <aid> a,Mask <ord> x,Mask <ord> y,Mask <ord> xd,Mask <ord> yd,Ma
   xdst_mask = xd;
   ydst_mask = yd;
   move_mask = m;
+}
+
+void Sign::mutate(int max_aid_bit,int max_ord_bit) {
+  int r = rand();
+  if (r<RAND_MAX/6) agent_mask.mutate(max_aid_bit);
+  else if (r<RAND_MAX/3) xloc_mask.mutate(max_ord_bit);
+  else if (r<RAND_MAX/2) yloc_mask.mutate(max_ord_bit);
+  else if (r<(RAND_MAX/3)*2) xdst_mask.mutate(max_ord_bit);
+  else if (r<(RAND_MAX/6)*5) ydst_mask.mutate(max_ord_bit);
+  else move_mask.mutate(3);
 }
 
 void Sign::print() {

@@ -86,6 +86,15 @@ void drop_random_sign(signset *st) {
   }
 }
 
+void mutate_one_sign(signset *st) {
+  int r;
+  if (st->size()>0) {
+    r = rand() % st->size();
+    st->at(r).mutate(8,7);
+  }
+}
+
+
 void copy_half_signs(signset *ch, signset *pa) {
   unsigned int ii;
   for (ii=0;ii<pa->size();ii++) {
@@ -166,6 +175,10 @@ void mutate_pop() {
     if (random_choice(0.2)) {
       std::cout << "Dropping random sign from member " << ii << std::endl; 
       drop_random_sign(pop[ii]);
+    }
+    if (random_choice(0.2)) {
+      std::cout << "Mutating single sign in member " << ii << std::endl; 
+      mutate_one_sign(pop[ii]);
     }
   }
 }
