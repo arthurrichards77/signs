@@ -24,6 +24,7 @@ class Sim {
     ord get_ymax();
     int total_trips();
     void add_sign(Sign);
+    unsigned long int run(unsigned long int);
 };
 
 #endif

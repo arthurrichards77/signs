@@ -9,13 +9,10 @@
 
 int main(int argc, char *argv[]) {
   Sim s;
-
   FILE *pFile = NULL;
-
   aid num_agents = 0;
 
-  unsigned long int kk;
-
+  // read agent settings
   num_agents = s.read_agents();
   std::cout << num_agents << " agents initialized" << std::endl;
 
@@ -23,8 +20,8 @@ int main(int argc, char *argv[]) {
   //Sign sn(Mask<aid>(0,0),Mask<ord>(48,32),Mask<ord>(128,128),Mask<ord>(255,gray(50)),Mask<ord>(255,gray(5)),Mask<mv>(5,5));
   Sign sn(Mask<aid>(0,0),
           Mask<ord>(0,0),Mask<ord>(0,0),
-          Mask<ord>(0,0),Mask<ord>(0,0),
-          Mask<mv>(7,gray(6)));
+          Mask<ord>(255,gray(50)),Mask<ord>(255,gray(120)),
+          Mask<mv>(6,0));
   s.add_sign(sn);
 
   if (argc>1) {
@@ -38,14 +35,9 @@ int main(int argc, char *argv[]) {
   }
 
   std::cout << "World is " << s.get_xmax() << "x" << s.get_ymax() << std::endl;
-  if (pFile!=NULL) fprintf(pFile,"%lu,%lu\n", s.get_xmax(), s.get_ymax());
 
-  for (kk=0;kk<500;kk++) {
-     s.forward_update();
-     s.print_status();
-     s.reverse_update();
-     s.print_status();
-  }
+  unsigned long int n = s.run(1000);
+  std::cout << n << " steps simulated" << std::endl;
 
   std::cout << s.total_trips() << " trips completed overall" << std::endl;
 

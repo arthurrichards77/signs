@@ -135,3 +135,20 @@ int Sim::total_trips() {
     }
     return(n);
 }
+
+unsigned long int Sim::run(unsigned long int num_steps) {
+
+  unsigned long int kk;
+  
+  if (out_file!=NULL) fprintf(out_file,"%lu,%lu\n", get_xmax(), get_ymax());
+
+  for (kk=0;kk<num_steps;kk+=2) {
+     forward_update();
+     print_status();
+     reverse_update();
+     print_status();
+  }
+
+  return(kk);
+
+}
