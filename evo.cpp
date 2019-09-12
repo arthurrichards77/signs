@@ -106,7 +106,7 @@ void copy_half_signs(signset *ch, signset *pa) {
   unsigned int ii;
   for (ii=0;ii<pa->size();ii++) {
     if (random_choice(0.5)) {
-      ch->push_back(pa->at(ii)); 
+      ch->push_back(Sign(pa->at(ii))); 
     }
   }
 }

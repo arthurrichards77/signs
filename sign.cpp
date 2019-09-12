@@ -14,6 +14,15 @@ Sign::Sign(Mask <aid> a,Mask <ord> x,Mask <ord> y,Mask <ord> xd,Mask <ord> yd,Ma
   move_mask = m;
 }
 
+Sign::Sign(const Sign &s){
+  agent_mask = Mask<aid>(s.agent_mask);
+  xloc_mask = Mask<ord>(s.xloc_mask);
+  yloc_mask = Mask<ord>(s.yloc_mask);
+  xdst_mask = Mask<ord>(s.xdst_mask);
+  ydst_mask = Mask<ord>(s.ydst_mask);
+  move_mask = Mask<mv>(s.move_mask);
+}
+
 void Sign::mutate(int max_aid_bit,int max_ord_bit) {
   int r = rand();
   if (r<RAND_MAX/6) agent_mask.mutate(max_aid_bit);
