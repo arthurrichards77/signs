@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
   //        Mask<ord>(255,gray(50)),Mask<ord>(255,gray(120)),
   //        Mask<mv>(6,0));
   //s.add_sign(sn);
-  #include "signresult.cpp"
+  //#include "signresult.cpp"
 
   FILE *pFile = NULL;
   if (argc>1) {
