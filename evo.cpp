@@ -11,7 +11,7 @@
 typedef std::vector<Sign> signset;
 
 // population size
-const unsigned int pop_size=50;
+const unsigned int pop_size=100;
 
 // lazy: keep population in a global
 signset *pop[pop_size];
@@ -94,6 +94,13 @@ void mutate_one_sign(signset *st) {
   }
 }
 
+void openup_one_sign(signset *st) {
+  int r;
+  if (st->size()>0) {
+    r = rand() % st->size();
+    st->at(r).mutate(8,7);
+  }
+}
 
 void copy_half_signs(signset *ch, signset *pa) {
   unsigned int ii;
@@ -137,10 +144,10 @@ void eval_pop() {
 
   evals.clear();
   for (ii=0;ii<pop_size;ii++) {
-    std::cout << "Member " << ii << " has " << pop[ii]->size() << " signs" << std::endl;
+    std::cout << "Member " << ii << " has " << pop[ii]->size() << " signs";
     e.id = ii;
     e.fitness = eval(pop[ii],500);
-    std::cout << "Member " << ii << " scores " << e.fitness << std::endl;
+    std::cout << " and scores " << e.fitness << std::endl;
     // store for sorting
     evals.push_back(e);
   }
@@ -151,15 +158,29 @@ void eval_pop() {
 
 }
 
+typedef struct {
+  int p1;
+  int p2;
+} int_pair;
+
+int_pair get_parents(int max_num) {
+  int_pair pr;
+  pr.p1 = rand() % max_num;
+  pr.p2 = rand() % max_num;
+  while (pr.p1==pr.p2) pr.p2 = rand() % max_num;
+}
+
 void breed_pop() {
-  int keepers = 20;
+  int keepers = 40;
   int p1,p2,ii;
 
   for (ii=keepers;ii<pop_size;ii++) {
-    p1 = rand() % (keepers-1);
-    p2 = p1 + 1 + (rand() % (keepers-p1-1));
-    std::cout << "Replacing " << evals[ii].id << " with child of " 
-              << evals[p1].id << " and " << evals[p2].id << std::endl; 
+    p1 = rand() % keepers;
+    p2 = rand() % keepers;
+    while (p1==p2) p2 = rand() % keepers;
+    std::cout << "Replacing " << evals[ii].id << "(" << evals[ii].fitness << ")"
+              <<  " with child of " << evals[p1].id  << "(" << evals[p1].fitness << ")"
+              << " and " << evals[p2].id   << "(" << evals[p2].fitness << ")" << std::endl; 
     crossover(pop[evals[ii].id],pop[evals[p1].id],pop[evals[p2].id]);
   }
 }
@@ -168,17 +189,31 @@ void mutate_pop() {
 
   unsigned int ii;
   for (ii=0;ii<pop_size;ii++) {
-    if (random_choice(0.2)) {
+    if (random_choice(0.1)) {
       std::cout << "Adding random sign to member " << ii << std::endl; 
       add_random_sign(pop[ii],256,128,128);
     }
-    if (random_choice(0.2)) {
+    if (random_choice(0.1)) {
+      std::cout << "Adding two random signs to member " << ii << std::endl; 
+      add_random_sign(pop[ii],256,128,128);
+      add_random_sign(pop[ii],256,128,128);
+    }
+    if (random_choice(0.1)) {
       std::cout << "Dropping random sign from member " << ii << std::endl; 
+      drop_random_sign(pop[ii]);
+    }
+    if (random_choice(0.1)) {
+      std::cout << "Dropping two random signs from member " << ii << std::endl; 
+      drop_random_sign(pop[ii]);
       drop_random_sign(pop[ii]);
     }
     if (random_choice(0.2)) {
       std::cout << "Mutating single sign in member " << ii << std::endl; 
       mutate_one_sign(pop[ii]);
+    }
+    if (random_choice(0.1)) {
+      std::cout << "Opening up single sign in member " << ii << std::endl; 
+      openup_one_sign(pop[ii]);
     }
   }
 }

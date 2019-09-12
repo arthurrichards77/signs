@@ -16,6 +16,7 @@ class Mask {
     T get_and() {return(and_mask);};
     bool match(T);
     void mutate(unsigned int);
+    void openup();
 };
 
 template <class T>
@@ -50,6 +51,12 @@ void Mask<T>::mutate(unsigned int max_bit) {
   }
 }
 
+template <class T>
+void Mask<T>::openup() {
+    xor_mask = 0;
+    and_mask = 0;
+}
+
 class Sign{
     Mask <aid> agent_mask;
     Mask <ord> xloc_mask;
@@ -63,6 +70,7 @@ class Sign{
     bool permits(mv);
     bool check_move(aid,ord,ord,ord,ord,mv);
     void print();
+    void openup();
     void mutate(int,int);
 };
 
