@@ -11,7 +11,7 @@
 typedef std::vector<Sign> signset;
 
 // population size
-const unsigned int pop_size=100;
+const unsigned int pop_size=60;
 
 // lazy: keep population in a global
 signset *pop[pop_size];

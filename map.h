@@ -15,7 +15,7 @@ class Location {
     Location();
     Location(ord,ord);
     void set_xy(ord,ord);
-    float distance(Location);
+    ord distance(Location);
     bool eq(Location);
     Location decode_move(unsigned int);
     void print();
