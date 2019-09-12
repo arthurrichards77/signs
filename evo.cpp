@@ -151,8 +151,9 @@ void eval_pop() {
 
 }
 
+const int keepers = 20;
+
 void breed_pop() {
-  int keepers = 20;
   int p1,p2,ii;
 
   for (ii=keepers;ii<pop_size;ii++) {
@@ -164,19 +165,21 @@ void breed_pop() {
   }
 }
 
+const float prob_mut = 0.1;
+
 void mutate_pop() {
 
   unsigned int ii;
   for (ii=0;ii<pop_size;ii++) {
-    if (random_choice(0.2)) {
+    if (random_choice(prob_mut)) {
       std::cout << "Adding random sign to member " << ii << std::endl; 
       add_random_sign(pop[ii],256,128,128);
     }
-    if (random_choice(0.2)) {
+    if (random_choice(prob_mut)) {
       std::cout << "Dropping random sign from member " << ii << std::endl; 
       drop_random_sign(pop[ii]);
     }
-    if (random_choice(0.2)) {
+    if (random_choice(prob_mut)) {
       std::cout << "Mutating single sign in member " << ii << std::endl; 
       mutate_one_sign(pop[ii]);
     }
@@ -194,7 +197,7 @@ int main() {
   init_pop();
   eval_pop();
 
-  for (gg=0;gg<500;gg++) {
+  for (gg=0;gg<50000;gg++) {
     std::cout << "GENERATION " << gg << std::endl;
     print_signs(pop[evals.front().id]);
     breed_pop();
