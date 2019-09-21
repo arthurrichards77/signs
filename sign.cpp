@@ -14,6 +14,15 @@ Sign::Sign(Mask <aid> a,Mask <ord> x,Mask <ord> y,Mask <ord> xd,Mask <ord> yd,Ma
   move_mask = m;
 }
 
+Sign::Sign(const Sign &s){
+  agent_mask = Mask<aid>(s.agent_mask);
+  xloc_mask = Mask<ord>(s.xloc_mask);
+  yloc_mask = Mask<ord>(s.yloc_mask);
+  xdst_mask = Mask<ord>(s.xdst_mask);
+  ydst_mask = Mask<ord>(s.ydst_mask);
+  move_mask = Mask<mv>(s.move_mask);
+}
+
 void Sign::mutate(int max_aid_bit,int max_ord_bit) {
   int r = rand();
   if (r<RAND_MAX/6) agent_mask.mutate(max_aid_bit);
@@ -24,14 +33,24 @@ void Sign::mutate(int max_aid_bit,int max_ord_bit) {
   else move_mask.mutate(3);
 }
 
+void Sign::openup() {
+  int r = rand();
+  if (r<RAND_MAX/5) agent_mask.openup();
+  else if (r<(RAND_MAX/5)*2) xloc_mask.openup();
+  else if (r<(RAND_MAX/5)*3) yloc_mask.openup();
+  else if (r<(RAND_MAX/5)*4) xdst_mask.openup();
+  else ydst_mask.openup();
+}
+
 void Sign::print() {
-  std::cout << "(" << agent_mask.get_and() << "," << agent_mask.get_xor() << ") ";
-  std::cout << "(" << xloc_mask.get_and() << "," << xloc_mask.get_xor() << ") ";
-  std::cout << "(" << yloc_mask.get_and() << "," << yloc_mask.get_xor() << ") ";
-  std::cout << "(" << xdst_mask.get_and() << "," << xdst_mask.get_xor() << ") ";
-  std::cout << "(" << ydst_mask.get_and() << "," << ydst_mask.get_xor() << ") ";
-  std::cout << "(" << move_mask.get_and() << "," << move_mask.get_xor() << ") ";
-  std::cout << std::endl;
+  std::cout << "Sign( ";
+  std::cout << "Mask<aid>(" << agent_mask.get_and() << "," << agent_mask.get_xor() << "), ";
+  std::cout << "Mask<ord>(" << xloc_mask.get_and() << "," << xloc_mask.get_xor() << "), ";
+  std::cout << "Mask<ord>(" << yloc_mask.get_and() << "," << yloc_mask.get_xor() << "), ";
+  std::cout << "Mask<ord>(" << xdst_mask.get_and() << "," << xdst_mask.get_xor() << "), ";
+  std::cout << "Mask<ord>(" << ydst_mask.get_and() << "," << ydst_mask.get_xor() << "), ";
+  std::cout << "Mask<mv>(" << move_mask.get_and() << "," << move_mask.get_xor() << ") ";
+  std::cout << " )" << std::endl;
 }
 
 bool Sign::applies(aid a,ord x,ord y,ord xd,ord yd) {

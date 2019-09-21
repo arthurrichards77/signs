@@ -33,8 +33,26 @@ void Location::set_xy(ord x_in,ord y_in) {
     y=y_in;
 }
 
-float Location::distance(Location other) {
-    return(sqrt((x-other.x)*(x-other.x)+(y-other.y)*(y-other.y)));
+//float Location::distance(Location other) {
+//    return(sqrt(d(x,other.x)*d(x,other.x)+d(y,other.y)*d(y,other.y)));
+//}
+
+ord Location::distance(Location other) {
+  ord dx, dy;
+  if (x>other.x) {
+    dx = x-other.x;
+  } else {
+    dx = other.x-x;
+  }
+  if (y>other.y) {
+    dy = y-other.y;
+  } else {
+    dy = other.y-y;
+  }
+//  if (dx>dy) {
+//    dy = dx;
+//  }
+  return(dy+dx);
 }
 
 bool Location::eq(Location other) {

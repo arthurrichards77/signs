@@ -49,7 +49,8 @@ aid Sim::read_agents() {
      while ( ! feof (pFile) )
      {
        if ( fgets (buffer , 100 , pFile) == NULL ) break;
-       sscanf(buffer,"%c,%lu,%lu",&c,&gx,&gy);
+       //sscanf(buffer,"%c,%lu,%lu",&c,&gx,&gy);
+       sscanf(buffer,"%c,%hu,%hu",&c,&gx,&gy);
        if (parse_mode==0) {
          if (c=='W') {
            m.init_occ(gx,gy);
@@ -116,8 +117,9 @@ aid Sim::print_status() {
     aid ii;
     if (out_file!=NULL) {
       for (ii=0;ii<agents.size();ii++) {
-        fprintf(out_file,"%lu,%lu,%lu,%lu,%lu,%lu\n", clock, 
-                                     agents.at(ii).get_id(),
+//        fprintf(out_file,"%lu,%lu,%lu,%lu,%lu,%u\n", clock, 
+        fprintf(out_file,"%lu,%u,%u,%u,%u,%u\n", clock, 
+                                       agents.at(ii).get_id(),
                                      agents.at(ii).current_location.x,
                                      agents.at(ii).current_location.y,
                                      agents.at(ii).goal.x,
@@ -140,7 +142,8 @@ unsigned long int Sim::run(unsigned long int num_steps) {
 
   unsigned long int kk;
   
-  if (out_file!=NULL) fprintf(out_file,"%lu,%lu\n", get_xmax(), get_ymax());
+//  if (out_file!=NULL) fprintf(out_file,"%lu,%lu\n", get_xmax(), get_ymax());
+  if (out_file!=NULL) fprintf(out_file,"%u,%u\n", get_xmax(), get_ymax());
 
   for (kk=0;kk<num_steps;kk+=2) {
      forward_update();

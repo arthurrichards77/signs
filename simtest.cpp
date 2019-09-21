@@ -16,11 +16,12 @@ int main(int argc, char *argv[]) {
 
   // test - add signs
   //Sign sn(Mask<aid>(0,0),Mask<ord>(48,32),Mask<ord>(128,128),Mask<ord>(255,gray(50)),Mask<ord>(255,gray(5)),Mask<mv>(5,5));
-  Sign sn(Mask<aid>(0,0),
-          Mask<ord>(0,0),Mask<ord>(0,0),
-          Mask<ord>(255,gray(50)),Mask<ord>(255,gray(120)),
-          Mask<mv>(6,0));
-  s.add_sign(sn);
+  //Sign sn(Mask<aid>(0,0),
+  //        Mask<ord>(0,0),Mask<ord>(0,0),
+  //        Mask<ord>(255,gray(50)),Mask<ord>(255,gray(120)),
+  //        Mask<mv>(6,0));
+  //s.add_sign(sn);
+  #include "signresult.cpp"
 
   FILE *pFile = NULL;
   if (argc>1) {
@@ -35,7 +36,7 @@ int main(int argc, char *argv[]) {
 
   std::cout << "World is " << s.get_xmax() << "x" << s.get_ymax() << std::endl;
 
-  unsigned long int n = s.run(1000);
+  unsigned long int n = s.run(500);
   std::cout << n << " steps simulated" << std::endl;
 
   std::cout << s.total_trips() << " trips completed overall" << std::endl;

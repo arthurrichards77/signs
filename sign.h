@@ -12,10 +12,12 @@ class Mask {
   public:
     Mask ();
     Mask (T, T);
-    T get_xor() {return(xor_mask);};
-    T get_and() {return(and_mask);};
+    Mask (const Mask<T>&);
+    T get_xor() const {return(xor_mask);};
+    T get_and() const {return(and_mask);};
     bool match(T);
     void mutate(unsigned int);
+    void openup();
 };
 
 template <class T>
@@ -28,6 +30,12 @@ template <class T>
 Mask<T>::Mask () {
   and_mask = 0;
   xor_mask = 1;
+}
+
+template <class T>
+Mask<T>::Mask (const Mask<T> &m) {
+  and_mask = m.and_mask;
+  xor_mask = m.xor_mask;
 }
 
 template <class T>
@@ -50,6 +58,12 @@ void Mask<T>::mutate(unsigned int max_bit) {
   }
 }
 
+template <class T>
+void Mask<T>::openup() {
+    xor_mask = 0;
+    and_mask = 0;
+}
+
 class Sign{
     Mask <aid> agent_mask;
     Mask <ord> xloc_mask;
@@ -59,10 +73,12 @@ class Sign{
     Mask <mv> move_mask;
   public:
     Sign(Mask <aid>,Mask <ord>,Mask <ord>,Mask <ord>,Mask <ord>,Mask <mv>);
+    Sign(const Sign&);
     bool applies(aid,ord,ord,ord,ord);
     bool permits(mv);
     bool check_move(aid,ord,ord,ord,ord,mv);
     void print();
+    void openup();
     void mutate(int,int);
 };
 

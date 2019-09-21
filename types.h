@@ -2,10 +2,10 @@
 #define TYPES_H
 
 // type def for agent ID
-typedef unsigned long int aid;
+typedef unsigned short int aid;
 
 // type def for position index - i.e. ordinate
-typedef unsigned long int ord;
+typedef unsigned short int ord;
 
 // type for move identifier
 typedef unsigned int mv;
