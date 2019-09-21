@@ -7,14 +7,14 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <assert.h>
 
 typedef std::vector<Sign> signset;
 
 // population size
-const unsigned int pop_size=60;
-
+unsigned int pop_size=60;
 // lazy: keep population in a global
-signset *pop[pop_size];
+std::vector<signset*> pop;
 
 // storage of fitness evaluations
 typedef struct {
@@ -126,7 +126,7 @@ void init_pop() {
 
   for (ii=0;ii<pop_size;ii++) {
     num_signs = 10 + (rand() % 30);
-    pop[ii]=new(signset);
+    pop.push_back(new(signset));
     for (jj=0;jj<num_signs;jj++) {
       add_random_sign(pop[ii],256,128,128);
     }
@@ -158,7 +158,7 @@ void eval_pop() {
 
 }
 
-const unsigned int keepers = 30;
+unsigned int keepers=1;
 
 void breed_pop() {
   int p1,p2,ii;
@@ -174,7 +174,7 @@ void breed_pop() {
   }
 }
 
-const float prob_mut = 0.1;
+float prob_mut = 0.1;
 
 void mutate_pop() {
 
@@ -211,7 +211,39 @@ void mutate_pop() {
 
 // ***** MAIN LOOP
 
-int main() {
+void process_command_line(int argc, char *argv[]) {
+  int ii;
+  if (argc!=4) {
+    std::cout << argv[0] << " popsize probmut probsel" << std::endl;
+    exit(1);
+  }
+  for (ii=0;ii<argc;ii++) {
+    std::cout << argv[ii] << " ";
+  }
+  std::cout << std::endl;
+  // population size
+  sscanf(argv[1],"%u",&pop_size);
+  std::cout << "Population size: " << pop_size << std::endl;
+  assert(pop_size>0);
+  // mutation probability
+  sscanf(argv[2],"%f",&prob_mut);
+  std::cout << "Probability of mutation: " << prob_mut << std::endl;
+  assert(prob_mut<=1.0);
+  assert(prob_mut>=0.0);
+  // mutation probability
+  float prob_sel;
+  sscanf(argv[3],"%f",&prob_sel);
+  keepers = prob_sel*pop_size;
+  std::cout << "Probability of selection: " << prob_sel << "(" 
+            << keepers << "/" << pop_size << ")" << std::endl;
+  assert(prob_sel<=1.0);
+  assert(prob_sel>=0.0);
+
+}
+
+int main(int argc, char *argv[]) {
+
+  process_command_line(argc, argv);
 
   unsigned int gg;
 
