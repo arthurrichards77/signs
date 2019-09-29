@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <assert.h>
+#include <math.h>
 
 typedef std::vector<Sign> signset;
 
@@ -19,7 +20,7 @@ std::vector<signset*> pop;
 // storage of fitness evaluations
 typedef struct {
   unsigned int id;
-  unsigned long int fitness; 
+  double fitness; 
 } evaluation;
 std::vector<evaluation> evals;
 
@@ -34,7 +35,12 @@ bool random_choice(float prob_true) {
 
 // ***** INDIVIDUAL STUFF *****
 
-unsigned long int eval(signset *st, unsigned long int num_steps) {
+// weight on number of signs
+double alpha = 0.0001;
+
+double eval(signset *st, unsigned long int num_steps) {
+
+  double fitness;
 
   // initialize simulator
   Sim s;
@@ -44,9 +50,19 @@ unsigned long int eval(signset *st, unsigned long int num_steps) {
   unsigned int ii;
   for (ii=0;ii<st->size();ii++) s.add_sign(st->at(ii));
 
+  std::cout << "Evaluating " << st->size() << " signs: ";
+
   // run and return trip count
   s.run(num_steps);
-  return(s.total_trips());
+
+  // fitness combines:
+  // maximize number of trips
+  // minimize number of signs
+  fitness = (s.total_trips()/486.0)*pow(20.0/(20.0+st->size()),alpha);
+
+  std::cout << s.total_trips() << " trips scoring " << fitness << std::endl;
+
+  return(fitness);
 
 }
 
@@ -144,10 +160,8 @@ void eval_pop() {
 
   evals.clear();
   for (ii=0;ii<pop_size;ii++) {
-    std::cout << "Member " << ii << " has " << pop[ii]->size() << " signs";
     e.id = ii;
     e.fitness = eval(pop[ii],500);
-    std::cout << " and scores " << e.fitness << std::endl;
     // store for sorting
     evals.push_back(e);
   }
