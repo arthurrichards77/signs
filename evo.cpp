@@ -10,20 +10,6 @@
 #include <assert.h>
 #include <math.h>
 
-typedef std::vector<Sign> signset;
-
-// population size
-unsigned int pop_size=60;
-// lazy: keep population in a global
-std::vector<signset*> pop;
-
-// storage of fitness evaluations
-typedef struct {
-  unsigned int id;
-  double fitness; 
-} evaluation;
-std::vector<evaluation> evals;
-
 // ***** UTILITIES *****
 
 bool random_choice(float prob_true) {
@@ -33,14 +19,34 @@ bool random_choice(float prob_true) {
   return(res);
 }
 
+// ***** GA STUFF *****
+
+typedef std::vector<Sign> signset;
+
+// population size
+unsigned int pop_size=60;
+// lazy: keep population in a global
+std::vector<signset*> pop;
+
+// storage of fitness evaluations
+typedef struct {
+  double fitness; 
+  unsigned int n_trips;
+  unsigned int n_signs;
+} evaluation;
+std::vector<evaluation> evals;
+
+// index for sorting
+std::vector<unsigned int> rank;
+
 // ***** INDIVIDUAL STUFF *****
 
 // weight on number of signs
 double alpha = 0.0001;
 
-double eval(signset *st, unsigned long int num_steps) {
+evaluation eval(signset *st, unsigned long int num_steps) {
 
-  double fitness;
+  evaluation e;
 
   // initialize simulator
   Sim s;
@@ -56,13 +62,15 @@ double eval(signset *st, unsigned long int num_steps) {
   s.run(num_steps);
 
   // fitness combines:
+  e.n_trips = s.total_trips();
+  e.n_signs = st->size();
   // maximize number of trips
   // minimize number of signs
-  fitness = (s.total_trips()/486.0)*pow(20.0/(20.0+st->size()),alpha);
+  e.fitness = (e.n_trips/486.0)*pow(20.0/(20.0+e.n_signs),alpha);
 
-  std::cout << s.total_trips() << " trips scoring " << fitness << std::endl;
+  std::cout << s.total_trips() << " trips scoring " << e.fitness << std::endl;
 
-  return(fitness);
+  return(e);
 
 }
 
@@ -159,13 +167,19 @@ void crossover(signset *ch, signset *p1, signset *p2) {
 
 // ***** POPULATION STUFF
 
+const unsigned int min_signs = 50;
+const unsigned int max_signs = 100;
+
 void init_pop() {
 
   unsigned int ii,jj,num_signs;
+  evaluation e;
 
   for (ii=0;ii<pop_size;ii++) {
-    num_signs = 10 + (rand() % 30);
+    num_signs = min_signs + (rand() % (max_signs-min_signs));
     pop.push_back(new(signset));
+    evals.push_back(e);
+    rank.push_back(ii);
     for (jj=0;jj<num_signs;jj++) {
       add_random_sign(pop[ii],256,128,128);
     }
@@ -173,8 +187,8 @@ void init_pop() {
 
 }
 
-bool comp (evaluation e1, evaluation e2) {
-  return (e1.fitness>e2.fitness);
+bool comp (unsigned int ii, unsigned int jj) {
+  return (evals[ii].fitness>evals[jj].fitness);
 }
 
 void eval_pop() {
@@ -183,16 +197,14 @@ void eval_pop() {
 
   evals.clear();
   for (ii=0;ii<pop_size;ii++) {
-    e.id = ii;
-    e.fitness = eval(pop[ii],500);
+    e = eval(pop[ii],500);
     // store for sorting
     evals.push_back(e);
   }
-  std::sort(evals.begin(),evals.end(),comp);
+  std::sort(rank.begin(),rank.end(),comp);
   for (ii=0;ii<pop_size;ii++) {
-    std::cout << "Place " << ii+1 << " is member " << evals.at(ii).id << " with fitness " << evals.at(ii).fitness << std::endl;
+    std::cout << "Place " << ii+1 << " is member " << rank.at(ii) << " with fitness " << evals.at(rank.at(ii)).fitness << std::endl;
   }
-
 }
 
 unsigned int keepers=1;
@@ -204,10 +216,10 @@ void breed_pop() {
     p1 = rand() % keepers;
     p2 = rand() % keepers;
     while (p1==p2) p2 = rand() % keepers;
-    std::cout << "Replacing " << evals[ii].id << "(" << evals[ii].fitness << ")"
-              <<  " with child of " << evals[p1].id  << "(" << evals[p1].fitness << ")"
-              << " and " << evals[p2].id   << "(" << evals[p2].fitness << ")" << std::endl; 
-    crossover(pop[evals[ii].id],pop[evals[p1].id],pop[evals[p2].id]);
+    std::cout << "Replacing " << rank[ii] << "(" << evals[rank[ii]].fitness << ")"
+              <<  " with child of " << rank[p1]  << "(" << evals[rank[p1]].fitness << ")"
+              << " and " << rank[p2]   << "(" << evals[rank[p2]].fitness << ")" << std::endl; 
+    crossover(pop[rank[ii]],pop[rank[p1]],pop[rank[p2]]);
   }
 }
 
@@ -215,14 +227,34 @@ float prob_mut = 0.1;
 
 void mutate_pop() {
 
-  unsigned int ii;
-  for (ii=0;ii<pop_size;ii++) {
+  unsigned int ii,jj;
+  // leave the top-ranked unchanged
+  for (jj=1;jj<pop_size;jj++) {
+    ii = rank[jj];
     if (random_choice(prob_mut)) {
       std::cout << "Adding random sign to member " << ii << std::endl; 
       add_random_sign(pop[ii],256,128,128);
     }
     if (random_choice(prob_mut)) {
       std::cout << "Adding two random signs to member " << ii << std::endl; 
+      add_random_sign(pop[ii],256,128,128);
+      add_random_sign(pop[ii],256,128,128);
+    }
+    if (random_choice(prob_mut)) {
+      std::cout << "Adding four random signs to member " << ii << std::endl; 
+      add_random_sign(pop[ii],256,128,128);
+      add_random_sign(pop[ii],256,128,128);
+      add_random_sign(pop[ii],256,128,128);
+      add_random_sign(pop[ii],256,128,128);
+    }
+    if (random_choice(prob_mut)) {
+      std::cout << "Adding eight random signs to member " << ii << std::endl; 
+      add_random_sign(pop[ii],256,128,128);
+      add_random_sign(pop[ii],256,128,128);
+      add_random_sign(pop[ii],256,128,128);
+      add_random_sign(pop[ii],256,128,128);
+      add_random_sign(pop[ii],256,128,128);
+      add_random_sign(pop[ii],256,128,128);
       add_random_sign(pop[ii],256,128,128);
       add_random_sign(pop[ii],256,128,128);
     }
@@ -284,18 +316,21 @@ int main(int argc, char *argv[]) {
 
   process_command_line(argc, argv);
 
-  unsigned int gg;
+  double fittest = 0.0;
 
   srand(time(NULL));
-
   init_pop();
   eval_pop();
 
+  unsigned int gg;
   for (gg=0;gg<50000;gg++) {
     std::cout << "GENERATION " << gg << std::endl;
-    print_signs(pop[evals.front().id]);
-    sprintf(fn,"res_%u_%u.csv",gg,evals.front().fitness);
-    save_signs(pop[evals.front().id],fn);
+    if (evals[rank.front()].fitness>fittest) {
+      print_signs(pop[rank.front()]);
+      sprintf(fn,"res_%u_%03u_%6.0f.csv",evals[rank.front()].n_trips,evals[rank.front()].n_signs,1e6*evals[rank.front()].fitness);
+      save_signs(pop[rank.front()],fn);
+      fittest = evals[rank.front()].fitness;
+    }
     breed_pop();
     mutate_pop();
     eval_pop();
