@@ -66,10 +66,33 @@ double eval(signset *st, unsigned long int num_steps) {
 
 }
 
-void print_signs(signset *st) {
+void print_signs2(signset *st) {
   int ii;
   for (ii=0;ii<st->size();ii++) {
     st->at(ii).print();
+  }
+}
+
+void print_signs(signset *st) {
+  int ii;
+  char s[1000];
+  for (ii=0;ii<st->size();ii++) {
+    st->at(ii).c_str(s);
+    std::cout << s << std::endl;
+  }
+}
+
+void save_signs(signset *st, char *fn) {
+  int ii;
+  char s[1000];
+  FILE *outfile;
+  outfile = fopen(fn,"w");
+  if (outfile!=NULL) {
+    for (ii=0;ii<st->size();ii++) {
+      st->at(ii).c_str(s);
+      fprintf(outfile,"%s\n",s);
+    }
+    fclose(outfile);
   }
 }
 
@@ -257,6 +280,8 @@ void process_command_line(int argc, char *argv[]) {
 
 int main(int argc, char *argv[]) {
 
+  char fn[100];
+
   process_command_line(argc, argv);
 
   unsigned int gg;
@@ -269,6 +294,8 @@ int main(int argc, char *argv[]) {
   for (gg=0;gg<50000;gg++) {
     std::cout << "GENERATION " << gg << std::endl;
     print_signs(pop[evals.front().id]);
+    sprintf(fn,"res_%u_%u.csv",gg,evals.front().fitness);
+    save_signs(pop[evals.front().id],fn);
     breed_pop();
     mutate_pop();
     eval_pop();

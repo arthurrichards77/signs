@@ -78,6 +78,7 @@ class Sign{
     bool permits(mv);
     bool check_move(aid,ord,ord,ord,ord,mv);
     void print();
+    void c_str(char *);
     void openup();
     void mutate(int,int);
 };
