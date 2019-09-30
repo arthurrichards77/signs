@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <stdlib.h>
+#include <stdio.h>
 
 Sign::Sign(Mask <aid> a,Mask <ord> x,Mask <ord> y,Mask <ord> xd,Mask <ord> yd,Mask <mv> m){
   agent_mask = a;
@@ -43,7 +44,6 @@ void Sign::openup() {
 }
 
 void Sign::print() {
-  std::cout << "Sign( ";
   std::cout << "Mask<aid>(" << agent_mask.get_and() << "," << agent_mask.get_xor() << "), ";
   std::cout << "Mask<ord>(" << xloc_mask.get_and() << "," << xloc_mask.get_xor() << "), ";
   std::cout << "Mask<ord>(" << yloc_mask.get_and() << "," << yloc_mask.get_xor() << "), ";
@@ -51,6 +51,23 @@ void Sign::print() {
   std::cout << "Mask<ord>(" << ydst_mask.get_and() << "," << ydst_mask.get_xor() << "), ";
   std::cout << "Mask<mv>(" << move_mask.get_and() << "," << move_mask.get_xor() << ") ";
   std::cout << " )" << std::endl;
+}
+
+void Sign::c_str(char* s) {
+  sprintf(s,"S,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u",
+          agent_mask.get_and(),
+          agent_mask.get_xor(),
+          xloc_mask.get_and(),
+          xloc_mask.get_xor(),
+          yloc_mask.get_and(),
+          yloc_mask.get_xor(),
+          xdst_mask.get_and(),
+          xdst_mask.get_xor(),
+          ydst_mask.get_and(),
+          ydst_mask.get_xor(),
+          move_mask.get_and(),
+          move_mask.get_xor()
+         );
 }
 
 bool Sign::applies(aid a,ord x,ord y,ord xd,ord yd) {
