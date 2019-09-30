@@ -16,6 +16,7 @@ class Sim {
     std::vector<Agent> agents;
     bool spawn_agent(ord,ord,ord,ord);
     aid read_agents();
+    int read_signs(char *);
     FILE *open_output(char *);
     aid forward_update();
     aid reverse_update();

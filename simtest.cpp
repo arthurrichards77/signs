@@ -34,6 +34,10 @@ int main(int argc, char *argv[]) {
     std::cout << "Logging results to " << argv[1] << std::endl;
   }
 
+  if (argc>2) {
+    std::cout << "Read " << s.read_signs(argv[2]) << " signs" << std::endl;
+  }
+
   std::cout << "World is " << s.get_xmax() << "x" << s.get_ymax() << std::endl;
 
   unsigned long int n = s.run(500);

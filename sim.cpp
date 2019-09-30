@@ -86,6 +86,35 @@ aid Sim::read_agents() {
    return(num_agents);
 }
 
+int Sim::read_signs(char *fn) {
+   FILE * pFile;
+   char buffer [100];
+   char c;
+   int num_signs = 0;
+   unsigned int d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12;
+
+   pFile = fopen (fn , "r");
+   if (pFile == NULL) perror ("Error opening setup.txt");
+   else
+   {
+     while ( ! feof (pFile) )
+     {
+       if ( fgets (buffer , 100 , pFile) == NULL ) break;
+       sscanf(buffer,"%c,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u",&c,
+              &d1,&d2,&d3,&d4,&d5,&d6,&d7,&d8,&d9,&d10,&d11,&d12);
+       if (c=='S') {
+         add_sign(Sign(Mask<aid>(d1,d2),
+                       Mask<ord>(d3,d4),Mask<ord>(d5,d6),
+                       Mask<ord>(d7,d8),Mask<ord>(d9,d10),
+                       Mask<mv>(d11,d12)));
+         num_signs++;
+       }
+     }
+     fclose (pFile);
+   }
+   return(num_signs);
+}
+
 ord Sim::get_xmax() {
   return(m.get_xmax());
 }
