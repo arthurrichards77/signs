@@ -77,5 +77,5 @@ def animate(ii):
     ax1.plot(x_curr[ii],y_curr[ii],'k.')
     ax1.plot(x_curr[ii-4:ii+1],y_curr[ii-4:ii+1],'-')
 
-ani = animation.FuncAnimation(fig, animate, interval=10)
+ani = animation.FuncAnimation(fig, animate, interval=50)
 plt.show()

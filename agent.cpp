@@ -5,7 +5,7 @@
 Agent::Agent() {}
 
 Agent::Agent(Map *p_wrl,ord x, ord y) {
-    p_map = p_wrl;    
+    p_map = p_wrl;
     current_location.set_xy(x,y);
     p_map->take_occ(x,y);
     current_goal=0;
@@ -13,7 +13,7 @@ Agent::Agent(Map *p_wrl,ord x, ord y) {
 }
 
 Agent::Agent(Map *p_wrl,Location loc) {
-    p_map = p_wrl;    
+    p_map = p_wrl;
     current_location.set_xy(loc.x,loc.y);
     p_map->take_occ(loc.x,loc.y);
     current_goal=0;
@@ -92,7 +92,7 @@ void Agent::update() {
     Location best_loc,new_loc;
     // start with staying put
     best_loc = Location(current_location.x,current_location.y);
-    best_cost = current_location.distance(goal); // slight penalty for not moving
+    best_cost = current_location.distance(goal)+2; // slight penalty for not moving
     // try all other moves
     for (mv=0;mv<8;mv++) {
       // first check against signs
@@ -104,8 +104,7 @@ void Agent::update() {
         // check against other agents and end of world
         if (valid_move(new_loc)) {
           new_cost = new_loc.distance(goal);
-          if (!new_loc.eq(current_location)) new_cost-=0.5;
-          if (new_cost<=best_cost) {
+          if (new_cost<best_cost) {
             //new_loc.print();
             //std::cout << " gives improved cost= " << new_cost << std::endl;
             best_cost = new_cost;

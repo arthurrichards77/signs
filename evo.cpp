@@ -34,6 +34,7 @@ typedef struct {
   unsigned int n_trips;
   unsigned int n_signs;
 } evaluation;
+evaluation baseline_eval;
 std::vector<evaluation> evals;
 
 // index for sorting
@@ -64,9 +65,16 @@ evaluation eval(signset *st, unsigned long int num_steps) {
   // fitness combines:
   e.n_trips = s.total_trips();
   e.n_signs = st->size();
+
+  // store baseline if this is the empty signset
+  if (e.n_signs==0) {
+    baseline_eval = e;
+    std::cout << "(baseline) "
+  }
+
   // maximize number of trips
   // minimize number of signs
-  e.fitness = (e.n_trips/486.0)*pow(20.0/(20.0+e.n_signs),alpha);
+  e.fitness = (e.n_trips*1.0/baseline_eval.n_trips)*pow(20.0/(20.0+e.n_signs),alpha);
 
   std::cout << s.total_trips() << " trips scoring " << e.fitness << std::endl;
 
@@ -180,8 +188,10 @@ void init_pop() {
     pop.push_back(new(signset));
     evals.push_back(e);
     rank.push_back(ii);
-    for (jj=0;jj<num_signs;jj++) {
-      add_random_sign(pop[ii],256,128,128);
+    if (ii>=1) {
+      for (jj=0;jj<num_signs;jj++) {
+        add_random_sign(pop[ii],256,128,128);
+      }
     }
   }
 
