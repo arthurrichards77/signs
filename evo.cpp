@@ -69,7 +69,7 @@ evaluation eval(signset *st, unsigned long int num_steps) {
   // store baseline if this is the empty signset
   if (e.n_signs==0) {
     baseline_eval = e;
-    std::cout << "(baseline) "
+    std::cout << "(baseline) ";
   }
 
   // maximize number of trips
