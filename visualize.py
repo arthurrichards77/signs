@@ -29,12 +29,14 @@ mapsize = resdata[0]
 resdata = resdata[1:]
 
 num_agents = max([row[1] for row in resdata])
-x_data=numpy.transpose([[row[2] for row in resdata if row[1]==ii] for ii in range(num_agents)])
-y_data=numpy.transpose([[row[3] for row in resdata if row[1]==ii] for ii in range(num_agents)])
+x_curr=numpy.transpose([[row[2] for row in resdata if row[1]==ii] for ii in range(num_agents)])
+y_curr=numpy.transpose([[row[3] for row in resdata if row[1]==ii] for ii in range(num_agents)])
+x_goal=numpy.transpose([[row[4] for row in resdata if row[1]==ii] for ii in range(num_agents)])
+y_goal=numpy.transpose([[row[5] for row in resdata if row[1]==ii] for ii in range(num_agents)])
 
-goals = set([(row[4],row[5]) for row in resdata])
-x_goals = [g[0] for g in goals]
-y_goals = [g[1] for g in goals]
+all_goals = set([(row[4],row[5]) for row in resdata])
+x_all_goals = [g[0] for g in all_goals]
+y_all_goals = [g[1] for g in all_goals]
 
 x_sign = []
 y_sign = []
@@ -62,10 +64,18 @@ def animate(ii):
     ax1.clear()
     ax1.axis('equal')
     ax1.plot([-1, 1+mapsize[0], 1+mapsize[0], -1, -1],[-1, -1, 1+mapsize[1], 1+mapsize[1], -1],'r-')
-    ax1.plot(x_goals,y_goals,'gx')
+    ax1.plot(x_all_goals,y_all_goals,'gx')
     ax1.plot(x_sign,y_sign,'c+')
-    ax1.plot(x_data[ii],y_data[ii],'k.')
-    ax1.plot(x_data[ii-4:ii+1],y_data[ii-4:ii+1],'-')
+    for jj in range(num_agents):
+        for s in signdata:
+             if (gray(x_curr[ii][jj])&s[2])^s[3]==0:
+               if (gray(y_curr[ii][jj])&s[4])^s[5]==0:
+                 if (gray(x_goal[ii][jj])&s[6])^s[7]==0:
+                   if (gray(y_goal[ii][jj])&s[8])^s[9]==0:
+                     if (gray(jj)&s[0]^s[1])==0:
+                       ax1.plot(x_curr[ii][jj],y_curr[ii][jj],'rs')
+    ax1.plot(x_curr[ii],y_curr[ii],'k.')
+    ax1.plot(x_curr[ii-4:ii+1],y_curr[ii-4:ii+1],'-')
 
 ani = animation.FuncAnimation(fig, animate, interval=10)
 plt.show()
