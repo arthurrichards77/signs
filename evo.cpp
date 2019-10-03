@@ -167,6 +167,22 @@ void copy_half_signs(signset *ch, signset *pa) {
   }
 }
 
+const unsigned int min_signs = 50;
+const unsigned int max_signs = 100;
+
+void refresh(signset *ch) {
+
+  unsigned int jj,num_signs;
+
+  // wipe the child signs
+  ch->clear();
+  // add all new signs
+  num_signs = min_signs + (rand() % (max_signs-min_signs));
+  for (jj=0;jj<num_signs;jj++) {
+    add_random_sign(ch,256,128,128);
+  }
+}
+
 void crossover(signset *ch, signset *p1, signset *p2) {
   // wipe the child signs
   ch->clear();
@@ -176,23 +192,17 @@ void crossover(signset *ch, signset *p1, signset *p2) {
 
 // ***** POPULATION STUFF
 
-const unsigned int min_signs = 50;
-const unsigned int max_signs = 100;
-
 void init_pop() {
 
-  unsigned int ii,jj,num_signs;
+  unsigned int ii;
   evaluation e;
 
   for (ii=0;ii<pop_size;ii++) {
-    num_signs = min_signs + (rand() % (max_signs-min_signs));
     pop.push_back(new(signset));
     evals.push_back(e);
     rank.push_back(ii);
     if (ii>=1) {
-      for (jj=0;jj<num_signs;jj++) {
-        add_random_sign(pop[ii],256,128,128);
-      }
+      refresh(pop[ii]);
     }
   }
 
@@ -219,11 +229,12 @@ void eval_pop() {
 }
 
 unsigned int keepers=1;
+unsigned int newbies=1;
 
 void breed_pop() {
   int p1,p2,ii;
 
-  for (ii=keepers;ii<pop_size;ii++) {
+  for (ii=keepers;ii<pop_size-newbies;ii++) {
     p1 = rand() % keepers;
     p2 = rand() % keepers;
     while (p1==p2) p2 = rand() % keepers;
@@ -234,13 +245,23 @@ void breed_pop() {
   }
 }
 
+void renew_pop() {
+  int ii;
+
+  for (ii=pop_size-newbies;ii<pop_size;ii++) {
+    std::cout << "Replacing " << rank[ii] << "(" << evals[rank[ii]].fitness << ")"
+              <<  " with fresh talent" << std::endl; 
+    refresh(pop[rank[ii]]);
+  }
+}
+
 float prob_mut = 0.1;
 
 void mutate_pop() {
 
   unsigned int ii,jj;
   // leave the top-ranked unchanged
-  for (jj=1;jj<pop_size;jj++) {
+  for (jj=1;jj<pop_size-newbies;jj++) {
     ii = rank[jj];
     if (random_choice(prob_mut)) {
       std::cout << "Adding random sign to member " << ii << std::endl; 
@@ -293,8 +314,8 @@ void mutate_pop() {
 
 void process_command_line(int argc, char *argv[]) {
   int ii;
-  if (argc!=4) {
-    std::cout << argv[0] << " popsize probmut probsel" << std::endl;
+  if (argc!=5) {
+    std::cout << argv[0] << " popsize probmut probsel probrep" << std::endl;
     exit(1);
   }
   for (ii=0;ii<argc;ii++) {
@@ -310,7 +331,7 @@ void process_command_line(int argc, char *argv[]) {
   std::cout << "Probability of mutation: " << prob_mut << std::endl;
   assert(prob_mut<=1.0);
   assert(prob_mut>=0.0);
-  // mutation probability
+  // selection probability
   float prob_sel;
   sscanf(argv[3],"%f",&prob_sel);
   keepers = prob_sel*pop_size;
@@ -318,6 +339,14 @@ void process_command_line(int argc, char *argv[]) {
             << keepers << "/" << pop_size << ")" << std::endl;
   assert(prob_sel<=1.0);
   assert(prob_sel>=0.0);
+  // replacement probability
+  float prob_rep;
+  sscanf(argv[4],"%f",&prob_rep);
+  newbies = prob_rep*pop_size;
+  std::cout << "Probability of replacement: " << prob_rep << "(" 
+            << newbies << "/" << pop_size << ")" << std::endl;
+  assert(prob_rep<=1.0);
+  assert(prob_rep>=0.0);
 
 }
 
@@ -343,6 +372,7 @@ int main(int argc, char *argv[]) {
       fittest = evals[rank.front()].fitness;
     }
     breed_pop();
+    renew_pop();
     mutate_pop();
     eval_pop();
 
