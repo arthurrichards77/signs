@@ -15,6 +15,7 @@ class Mask {
     Mask (const Mask<T>&);
     T get_xor() const {return(xor_mask);};
     T get_and() const {return(and_mask);};
+    unsigned int num_bits();
     bool match(T);
     void mutate(unsigned int);
     void openup();
@@ -23,7 +24,7 @@ class Mask {
 template <class T>
 Mask<T>::Mask (T a, T x) {
   and_mask = a;
-  xor_mask = x;
+  xor_mask = x & a;
 }
 
 template <class T>
@@ -39,6 +40,18 @@ Mask<T>::Mask (const Mask<T> &m) {
 }
 
 template <class T>
+unsigned int Mask<T>::num_bits() {
+  unsigned int res = 0;
+  T tmp = and_mask;
+  while (tmp>0) {
+    res += tmp&1;
+    tmp = tmp >> 1;
+  }
+  return(res);
+}
+
+
+template <class T>
 bool Mask<T>::match (T u) {
   bool res = false;
   if (((gray(u)&and_mask)^xor_mask)==0) res=true;
@@ -51,6 +64,7 @@ void Mask<T>::mutate(unsigned int max_bit) {
   T mut = 1 << mut_bit;
   if (rand()<(RAND_MAX/2)) {
     and_mask = and_mask ^ mut;
+    xor_mask = xor_mask & and_mask;
   }
   else {
     xor_mask = xor_mask ^ mut;
@@ -79,6 +93,7 @@ class Sign{
     bool check_move(aid,ord,ord,ord,ord,mv);
     void print();
     void c_str(char *);
+    unsigned int num_bits();
     void openup();
     void mutate(int,int);
 };

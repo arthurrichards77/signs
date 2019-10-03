@@ -70,6 +70,11 @@ void Sign::c_str(char* s) {
          );
 }
 
+unsigned int Sign::num_bits() {
+  return( agent_mask.num_bits()+xloc_mask.num_bits()+yloc_mask.num_bits()
+          +xdst_mask.num_bits()+ydst_mask.num_bits()+move_mask.num_bits() );
+}
+
 bool Sign::applies(aid a,ord x,ord y,ord xd,ord yd) {
   bool result = false;
   if (agent_mask.match(a))

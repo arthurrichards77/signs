@@ -19,6 +19,9 @@ bool random_choice(float prob_true) {
   return(res);
 }
 
+const unsigned int min_signs = 50;
+const unsigned int max_signs = 100;
+
 // ***** GA STUFF *****
 
 typedef std::vector<Sign> signset;
@@ -33,6 +36,7 @@ typedef struct {
   double fitness; 
   unsigned int n_trips;
   unsigned int n_signs;
+  unsigned int n_bits;
 } evaluation;
 evaluation baseline_eval;
 std::vector<evaluation> evals;
@@ -57,14 +61,17 @@ evaluation eval(signset *st, unsigned long int num_steps) {
   unsigned int ii;
   for (ii=0;ii<st->size();ii++) s.add_sign(st->at(ii));
 
-  std::cout << "Evaluating " << st->size() << " signs: ";
+  // fitness combines:
+  e.n_signs = st->size();
+  e.n_bits = 0;
+  for (ii=0;ii<st->size();ii++) e.n_bits += st->at(ii).num_bits();
+
+  std::cout << "Evaluating " << e.n_signs << " signs with " << e.n_bits << " bits: ";
 
   // run and return trip count
   s.run(num_steps);
-
-  // fitness combines:
   e.n_trips = s.total_trips();
-  e.n_signs = st->size();
+
 
   // store baseline if this is the empty signset
   if (e.n_signs==0) {
@@ -74,7 +81,8 @@ evaluation eval(signset *st, unsigned long int num_steps) {
 
   // maximize number of trips
   // minimize number of signs
-  e.fitness = (e.n_trips*1.0/baseline_eval.n_trips)*pow(20.0/(20.0+e.n_signs),alpha);
+  e.fitness = (e.n_trips*1.0/baseline_eval.n_trips)*pow(min_signs*1.0/(min_signs+e.n_signs),alpha);
+  if (e.n_signs>0) e.fitness *= pow(min_signs*48.0/(min_signs*48.0+e.n_bits),alpha);
 
   std::cout << s.total_trips() << " trips scoring " << e.fitness << std::endl;
 
@@ -166,9 +174,6 @@ void copy_half_signs(signset *ch, signset *pa) {
     }
   }
 }
-
-const unsigned int min_signs = 50;
-const unsigned int max_signs = 100;
 
 void refresh(signset *ch) {
 
