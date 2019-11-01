@@ -37,6 +37,9 @@ typedef struct {
   unsigned int n_trips;
   unsigned int n_signs;
   unsigned int n_bits;
+  aid n_agents;
+  ord x_max;
+  ord y_max;
 } evaluation;
 evaluation baseline_eval;
 std::vector<evaluation> evals;
@@ -48,6 +51,8 @@ std::vector<unsigned int> rank;
 
 // weight on number of signs
 double alpha = 0.0001;
+// and on number of bits
+double beta = 0.0001;
 
 evaluation eval(signset *st, unsigned long int num_steps) {
 
@@ -56,6 +61,10 @@ evaluation eval(signset *st, unsigned long int num_steps) {
   // initialize simulator
   Sim s;
   s.read_agents();
+  // record problem dimensions
+  e.n_agents = s.get_amax();
+  e.x_max = s.get_xmax();
+  e.y_max = s.get_ymax();
 
   // add signs
   unsigned int ii;
@@ -82,8 +91,8 @@ evaluation eval(signset *st, unsigned long int num_steps) {
   // maximize number of trips
   // minimize number of signs
   e.fitness = (e.n_trips*1.0/baseline_eval.n_trips);
-  //e.fitness *= pow(min_signs*1.0/(min_signs+e.n_signs),alpha);
-  e.fitness *= pow(min_signs*48.0/(min_signs*48.0+e.n_bits),alpha);
+  if (alpha!=0.0) e.fitness *= pow(min_signs*1.0/(min_signs+e.n_signs),alpha);
+  if (beta!=0.0) e.fitness *= pow(min_signs*48.0/(min_signs*48.0+e.n_bits),beta);
 
   std::cout << s.total_trips() << " trips scoring " << e.fitness << std::endl;
 
@@ -185,6 +194,9 @@ void refresh(signset *ch) {
   // add all new signs
   num_signs = min_signs + (rand() % (max_signs-min_signs));
   for (jj=0;jj<num_signs;jj++) {
+    // TODO: problem size is hard-coded here
+    // should automatically size with the scenario
+    // which is loaded in the sim class
     add_random_sign(ch,256,128,128);
   }
 }
@@ -207,11 +219,11 @@ void init_pop() {
     pop.push_back(new(signset));
     evals.push_back(e);
     rank.push_back(ii);
+    // leave first one empty as baseline
     if (ii>=1) {
       refresh(pop[ii]);
     }
   }
-
 }
 
 bool comp (unsigned int ii, unsigned int jj) {
@@ -264,6 +276,8 @@ void renew_pop() {
 float prob_mut = 0.1;
 
 void mutate_pop() {
+
+  //TODO settings should resize with problem data
 
   unsigned int ii,jj;
   // leave the top-ranked unchanged
@@ -320,8 +334,8 @@ void mutate_pop() {
 
 void process_command_line(int argc, char *argv[]) {
   int ii;
-  if (argc!=5) {
-    std::cout << argv[0] << " popsize probmut probsel probrep" << std::endl;
+  if (argc!=7) {
+    std::cout << argv[0] << " popsize probmut probsel probrep alpha beta" << std::endl;
     exit(1);
   }
   for (ii=0;ii<argc;ii++) {
@@ -353,6 +367,10 @@ void process_command_line(int argc, char *argv[]) {
             << newbies << "/" << pop_size << ")" << std::endl;
   assert(prob_rep<=1.0);
   assert(prob_rep>=0.0);
+  // weights
+  sscanf(argv[5],"%lf",&alpha);
+  sscanf(argv[6],"%lf",&beta);
+  std::cout << "Weights are alpha=" << alpha << " (signs) and beta=" << beta << " (bits)." << std::endl;
 
 }
 
@@ -368,12 +386,14 @@ int main(int argc, char *argv[]) {
   init_pop();
   eval_pop();
 
+  std::cout << "World is " << evals[0].x_max << "x" << evals[0].y_max << " with " << evals[0].n_agents << " agents." << std::endl;
+
   unsigned int gg;
   for (gg=0;gg<50000;gg++) {
     std::cout << "GENERATION " << gg << std::endl;
     if (evals[rank.front()].fitness>fittest) {
       print_signs(pop[rank.front()]);
-      sprintf(fn,"res_%u_%03u_%6.0f.csv",evals[rank.front()].n_trips,evals[rank.front()].n_signs,1e6*evals[rank.front()].fitness);
+      sprintf(fn,"res_%u_%03u_%06u_%6.0f.csv",evals[rank.front()].n_trips,evals[rank.front()].n_signs,evals[rank.front()].n_bits,1e6*evals[rank.front()].fitness);
       save_signs(pop[rank.front()],fn);
       fittest = evals[rank.front()].fitness;
     }

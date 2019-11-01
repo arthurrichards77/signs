@@ -123,6 +123,10 @@ ord Sim::get_ymax() {
   return(m.get_ymax());
 }
 
+aid Sim::get_amax() {
+  return(agents.size());
+}
+
 aid Sim::forward_update() {
     aid ii;
     for (ii=0;ii<agents.size();ii++) {
