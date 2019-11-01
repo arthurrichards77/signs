@@ -172,7 +172,7 @@ void openup_one_sign(signset *st) {
   int r;
   if (st->size()>0) {
     r = rand() % st->size();
-    st->at(r).mutate(8,7);
+    st->at(r).openup();
   }
 }
 
