@@ -19,6 +19,9 @@ bool random_choice(float prob_true) {
   return(res);
 }
 
+const unsigned int min_signs = 50;
+const unsigned int max_signs = 100;
+
 // ***** GA STUFF *****
 
 typedef std::vector<Sign> signset;
@@ -33,6 +36,10 @@ typedef struct {
   double fitness; 
   unsigned int n_trips;
   unsigned int n_signs;
+  unsigned int n_bits;
+  aid n_agents;
+  ord x_max;
+  ord y_max;
 } evaluation;
 evaluation baseline_eval;
 std::vector<evaluation> evals;
@@ -44,6 +51,8 @@ std::vector<unsigned int> rank;
 
 // weight on number of signs
 double alpha = 0.0001;
+// and on number of bits
+double beta = 0.0001;
 
 evaluation eval(signset *st, unsigned long int num_steps) {
 
@@ -52,19 +61,26 @@ evaluation eval(signset *st, unsigned long int num_steps) {
   // initialize simulator
   Sim s;
   s.read_agents();
+  // record problem dimensions
+  e.n_agents = s.get_amax();
+  e.x_max = s.get_xmax();
+  e.y_max = s.get_ymax();
 
   // add signs
   unsigned int ii;
   for (ii=0;ii<st->size();ii++) s.add_sign(st->at(ii));
 
-  std::cout << "Evaluating " << st->size() << " signs: ";
+  // fitness combines:
+  e.n_signs = st->size();
+  e.n_bits = 0;
+  for (ii=0;ii<st->size();ii++) e.n_bits += st->at(ii).num_bits();
+
+  std::cout << "Evaluating " << e.n_signs << " signs with " << e.n_bits << " bits: ";
 
   // run and return trip count
   s.run(num_steps);
-
-  // fitness combines:
   e.n_trips = s.total_trips();
-  e.n_signs = st->size();
+
 
   // store baseline if this is the empty signset
   if (e.n_signs==0) {
@@ -74,7 +90,9 @@ evaluation eval(signset *st, unsigned long int num_steps) {
 
   // maximize number of trips
   // minimize number of signs
-  e.fitness = (e.n_trips*1.0/baseline_eval.n_trips)*pow(20.0/(20.0+e.n_signs),alpha);
+  e.fitness = (e.n_trips*1.0/baseline_eval.n_trips);
+  if (alpha!=0.0) e.fitness *= pow(min_signs*1.0/(min_signs+e.n_signs),alpha);
+  if (beta!=0.0) e.fitness *= pow(min_signs*48.0/(min_signs*48.0+e.n_bits),beta);
 
   std::cout << s.total_trips() << " trips scoring " << e.fitness << std::endl;
 
@@ -154,7 +172,7 @@ void openup_one_sign(signset *st) {
   int r;
   if (st->size()>0) {
     r = rand() % st->size();
-    st->at(r).mutate(8,7);
+    st->at(r).openup();
   }
 }
 
@@ -167,9 +185,6 @@ void copy_half_signs(signset *ch, signset *pa) {
   }
 }
 
-const unsigned int min_signs = 50;
-const unsigned int max_signs = 100;
-
 void refresh(signset *ch) {
 
   unsigned int jj,num_signs;
@@ -179,8 +194,12 @@ void refresh(signset *ch) {
   // add all new signs
   num_signs = min_signs + (rand() % (max_signs-min_signs));
   for (jj=0;jj<num_signs;jj++) {
+    // TODO: problem size is hard-coded here
+    // should automatically size with the scenario
+    // which is loaded in the sim class
     add_random_sign(ch,256,128,128);
   }
+
 }
 
 void crossover(signset *ch, signset *p1, signset *p2) {
@@ -201,11 +220,11 @@ void init_pop() {
     pop.push_back(new(signset));
     evals.push_back(e);
     rank.push_back(ii);
+    // leave first one empty as baseline
     if (ii>=1) {
       refresh(pop[ii]);
     }
   }
-
 }
 
 bool comp (unsigned int ii, unsigned int jj) {
@@ -252,6 +271,50 @@ void renew_pop() {
     std::cout << "Replacing " << rank[ii] << "(" << evals[rank[ii]].fitness << ")"
               <<  " with fresh talent" << std::endl; 
     refresh(pop[rank[ii]]);
+  }
+}
+
+float prob_exch = 0.05;
+
+void pop_exchange() {
+
+   char fn[]="traveller.csv";
+
+   FILE * pFile;
+   char buffer [100];
+   char c;
+   int num_signs = 0;
+   unsigned int d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12;
+
+  if (random_choice(prob_exch)) {
+    // send best as a traveller
+    save_signs(pop[rank.front()],fn);
+  }
+  else if (random_choice(prob_exch)) {
+    // receive traveller
+
+    pFile = fopen (fn , "r");
+    if (pFile == NULL) perror ("Failed to open traveller file");
+    else
+    {
+      // wipe the child signs
+      pop[rank.back()]->clear();
+      while ( ! feof (pFile) )
+      {
+        if ( fgets (buffer , 100 , pFile) == NULL ) break;
+        sscanf(buffer,"%c,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u",&c,
+               &d1,&d2,&d3,&d4,&d5,&d6,&d7,&d8,&d9,&d10,&d11,&d12);
+        if (c=='S') {
+          pop[rank.back()]->push_back(Sign(Mask<aid>(d1,d2),
+                                           Mask<ord>(d3,d4),Mask<ord>(d5,d6),
+                                           Mask<ord>(d7,d8),Mask<ord>(d9,d10),
+                                           Mask<mv>(d11,d12)));
+          num_signs++;
+        }
+      }
+      std::cout << "Read " << num_signs << " signs from traveller" << std::endl;
+      fclose (pFile);
+    }
   }
 }
 
@@ -314,8 +377,8 @@ void mutate_pop() {
 
 void process_command_line(int argc, char *argv[]) {
   int ii;
-  if (argc!=5) {
-    std::cout << argv[0] << " popsize probmut probsel probrep" << std::endl;
+  if (argc!=7) {
+    std::cout << argv[0] << " popsize probmut probsel probrep alpha beta" << std::endl;
     exit(1);
   }
   for (ii=0;ii<argc;ii++) {
@@ -347,6 +410,10 @@ void process_command_line(int argc, char *argv[]) {
             << newbies << "/" << pop_size << ")" << std::endl;
   assert(prob_rep<=1.0);
   assert(prob_rep>=0.0);
+  // weights
+  sscanf(argv[5],"%lf",&alpha);
+  sscanf(argv[6],"%lf",&beta);
+  std::cout << "Weights are alpha=" << alpha << " (signs) and beta=" << beta << " (bits)." << std::endl;
 
 }
 
@@ -362,17 +429,21 @@ int main(int argc, char *argv[]) {
   init_pop();
   eval_pop();
 
+  std::cout << "World is " << evals[0].x_max << "x" << evals[0].y_max << " with " << evals[0].n_agents << " agents." << std::endl;
+
   unsigned int gg;
   for (gg=0;gg<50000;gg++) {
     std::cout << "GENERATION " << gg << std::endl;
     if (evals[rank.front()].fitness>fittest) {
       print_signs(pop[rank.front()]);
-      sprintf(fn,"res_%u_%03u_%6.0f.csv",evals[rank.front()].n_trips,evals[rank.front()].n_signs,1e6*evals[rank.front()].fitness);
+      sprintf(fn,"res_%u_%03u_%06u_%6.0f.csv",evals[rank.front()].n_trips,evals[rank.front()].n_signs,evals[rank.front()].n_bits,1e6*evals[rank.front()].fitness);
       save_signs(pop[rank.front()],fn);
       fittest = evals[rank.front()].fitness;
     }
+
     breed_pop();
     renew_pop();
+    pop_exchange();
     mutate_pop();
     eval_pop();
 

@@ -23,6 +23,7 @@ class Sim {
     aid print_status();
     ord get_xmax();
     ord get_ymax();
+    aid get_amax();
     int total_trips();
     void add_sign(Sign);
     unsigned long int run(unsigned long int);
