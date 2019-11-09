@@ -199,6 +199,7 @@ void refresh(signset *ch) {
     // which is loaded in the sim class
     add_random_sign(ch,256,128,128);
   }
+
 }
 
 void crossover(signset *ch, signset *p1, signset *p2) {
@@ -273,11 +274,53 @@ void renew_pop() {
   }
 }
 
+float prob_exch = 0.05;
+
+void pop_exchange() {
+
+   char fn[]="traveller.csv";
+
+   FILE * pFile;
+   char buffer [100];
+   char c;
+   int num_signs = 0;
+   unsigned int d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12;
+
+  if (random_choice(prob_exch)) {
+    // send best as a traveller
+    save_signs(pop[rank.front()],fn);
+  }
+  else if (random_choice(prob_exch)) {
+    // receive traveller
+
+    pFile = fopen (fn , "r");
+    if (pFile == NULL) perror ("Failed to open traveller file");
+    else
+    {
+      // wipe the child signs
+      pop[rank.back()]->clear();
+      while ( ! feof (pFile) )
+      {
+        if ( fgets (buffer , 100 , pFile) == NULL ) break;
+        sscanf(buffer,"%c,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u",&c,
+               &d1,&d2,&d3,&d4,&d5,&d6,&d7,&d8,&d9,&d10,&d11,&d12);
+        if (c=='S') {
+          pop[rank.back()]->push_back(Sign(Mask<aid>(d1,d2),
+                                           Mask<ord>(d3,d4),Mask<ord>(d5,d6),
+                                           Mask<ord>(d7,d8),Mask<ord>(d9,d10),
+                                           Mask<mv>(d11,d12)));
+          num_signs++;
+        }
+      }
+      std::cout << "Read " << num_signs << " signs from traveller" << std::endl;
+      fclose (pFile);
+    }
+  }
+}
+
 float prob_mut = 0.1;
 
 void mutate_pop() {
-
-  //TODO settings should resize with problem data
 
   unsigned int ii,jj;
   // leave the top-ranked unchanged
@@ -397,8 +440,10 @@ int main(int argc, char *argv[]) {
       save_signs(pop[rank.front()],fn);
       fittest = evals[rank.front()].fitness;
     }
+
     breed_pop();
     renew_pop();
+    pop_exchange();
     mutate_pop();
     eval_pop();
 
