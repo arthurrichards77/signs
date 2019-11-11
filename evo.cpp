@@ -9,6 +9,7 @@
 #include <time.h>
 #include <assert.h>
 #include <math.h>
+#include <unistd.h>
 
 // ***** UTILITIES *****
 
@@ -425,7 +426,8 @@ int main(int argc, char *argv[]) {
 
   double fittest = 0.0;
 
-  srand(time(NULL));
+  std::cout << "Randomizing with seed " << getpid() << std::endl;
+  srand(getpid());
   init_pop();
   eval_pop();
 
