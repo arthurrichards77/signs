@@ -1,4 +1,4 @@
-from sim_builder import SimBuilder
+from .. import sim_builder
 
 s = SimBuilder(128,128)
 

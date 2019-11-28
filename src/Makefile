@@ -25,15 +25,7 @@ gray: gray.c gray.h
 	g++ -c gray.c
 
 clean:
-	rm *.o simtest graytest evo setup.txt *.csv
+	rm *.o simtest graytest evo
 
-visualize:
-	python visualize.py result.csv
-
-result: 
-	./simtest result.csv
-
-setup: 
-	python make_setup.py > setup.txt
-
-
+install:
+	cp simtest evo ..
