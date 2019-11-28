@@ -9,6 +9,7 @@
 #include <time.h>
 #include <assert.h>
 #include <math.h>
+#include <unistd.h>
 
 // ***** UTILITIES *****
 
@@ -122,7 +123,7 @@ void save_signs(signset *st, char *fn) {
   FILE *outfile;
   outfile = fopen(fn,"w");
   if (outfile!=NULL) {
-    std::cout << "Saving new best sign set to " << fn << std::endl;
+    std::cout << "[" << getpid() << "] Saving new best sign set to " << fn << std::endl;
     for (ii=0;ii<st->size();ii++) {
       st->at(ii).c_str(s);
       fprintf(outfile,"%s\n",s);
