@@ -28,4 +28,4 @@ clean:
 	rm *.o simtest graytest evo
 
 install:
-	cp simtest evo ..
+	cp simtest evo ../bin

@@ -8,3 +8,4 @@ evo
 *~
 *.sh.e*
 *.sh.o*
+**/.ipynb_checkpoints
