@@ -10,3 +10,4 @@ evo
 *.sh.o*
 **/.ipynb_checkpoints
 None*.png
+*.mp4
