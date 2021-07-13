@@ -1,3 +1,5 @@
+import os,sys
+sys.path.append(os.getcwd()+'/../../lib')
 from sim_builder import SimBuilder
 
 s = SimBuilder(128,128)
