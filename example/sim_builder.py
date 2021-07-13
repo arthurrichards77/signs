@@ -5,7 +5,7 @@ class SimBuilder:
   def __init__(self,x,y):
     self.xmax = x;
     self.ymax = y;
-    print "W,{},{}".format(x,y)
+    print("W,{},{}".format(x,y))
     self.pos_list = []
 
   def is_available(self,x,y):
@@ -42,13 +42,13 @@ class SimBuilder:
         warn("Will spawn instead at {},{}".format(x,y))
     if self.is_available(x,y):
       self.pos_list.append((x,y))
-      print "A,{},{}".format(x,y)
+      print("A,{},{}".format(x,y))
       for gpos in circuit:
         gx = int(gpos[0])
         gy = int(gpos[1])
         if gx>=self.xmax or gx<0 or gy>=self.ymax or gy<0:
           warn("Setting unreachable goal at {},{}".format(gx,gy))
-        print "G,{},{}".format(gpos[0],gpos[1])
+        print("G,{},{}".format(gpos[0],gpos[1]))
     else:
       warn("Could not spawn agent")
 
