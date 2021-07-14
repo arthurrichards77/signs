@@ -379,8 +379,8 @@ void mutate_pop() {
 
 void process_command_line(int argc, char *argv[]) {
   int ii;
-  if (argc!=7) {
-    std::cout << argv[0] << " popsize probmut probsel probrep alpha beta" << std::endl;
+  if (argc!=8) {
+    std::cout << argv[0] << " popsize probmut probsel probrep alpha beta probexch" << std::endl;
     exit(1);
   }
   for (ii=0;ii<argc;ii++) {
@@ -416,6 +416,11 @@ void process_command_line(int argc, char *argv[]) {
   sscanf(argv[5],"%lf",&alpha);
   sscanf(argv[6],"%lf",&beta);
   std::cout << "Weights are alpha=" << alpha << " (signs) and beta=" << beta << " (bits)." << std::endl;
+  // exchange (traveller) probability
+  sscanf(argv[7],"%f",&prob_exch);
+  std::cout << "Probability of exchange: " << prob_exch << std::endl;
+  assert(prob_exch<=1.0);
+  assert(prob_exch>=0.0);
 
 }
 
