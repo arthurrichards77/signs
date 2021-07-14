@@ -327,23 +327,24 @@ void mutate_pop() {
   // leave the top-ranked unchanged
   for (jj=1;jj<pop_size-newbies;jj++) {
     ii = rank[jj];
-    if (random_choice(prob_mut)) {
+    float prob_each = prob_mut/8.0;
+    if (random_choice(prob_each)) {
       std::cout << "Adding random sign to member " << ii << std::endl; 
       add_random_sign(pop[ii],256,128,128);
     }
-    if (random_choice(prob_mut)) {
+    if (random_choice(prob_each)) {
       std::cout << "Adding two random signs to member " << ii << std::endl; 
       add_random_sign(pop[ii],256,128,128);
       add_random_sign(pop[ii],256,128,128);
     }
-    if (random_choice(prob_mut)) {
+    if (random_choice(prob_each)) {
       std::cout << "Adding four random signs to member " << ii << std::endl; 
       add_random_sign(pop[ii],256,128,128);
       add_random_sign(pop[ii],256,128,128);
       add_random_sign(pop[ii],256,128,128);
       add_random_sign(pop[ii],256,128,128);
     }
-    if (random_choice(prob_mut)) {
+    if (random_choice(prob_each)) {
       std::cout << "Adding eight random signs to member " << ii << std::endl; 
       add_random_sign(pop[ii],256,128,128);
       add_random_sign(pop[ii],256,128,128);
@@ -354,20 +355,20 @@ void mutate_pop() {
       add_random_sign(pop[ii],256,128,128);
       add_random_sign(pop[ii],256,128,128);
     }
-    if (random_choice(prob_mut)) {
+    if (random_choice(prob_each)) {
       std::cout << "Dropping random sign from member " << ii << std::endl; 
       drop_random_sign(pop[ii]);
     }
-    if (random_choice(prob_mut)) {
+    if (random_choice(prob_each)) {
       std::cout << "Dropping two random signs from member " << ii << std::endl; 
       drop_random_sign(pop[ii]);
       drop_random_sign(pop[ii]);
     }
-    if (random_choice(prob_mut)) {
+    if (random_choice(prob_each)) {
       std::cout << "Mutating single sign in member " << ii << std::endl; 
       mutate_one_sign(pop[ii]);
     }
-    if (random_choice(prob_mut)) {
+    if (random_choice(prob_each)) {
       std::cout << "Opening up single sign in member " << ii << std::endl; 
       openup_one_sign(pop[ii]);
     }
