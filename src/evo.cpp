@@ -20,9 +20,6 @@ bool random_choice(float prob_true) {
   return(res);
 }
 
-const unsigned int min_signs = 50;
-const unsigned int max_signs = 100;
-
 // ***** GA STUFF *****
 
 typedef std::vector<Sign> signset;
@@ -47,6 +44,9 @@ std::vector<evaluation> evals;
 
 // index for sorting
 std::vector<unsigned int> rank;
+
+const unsigned int min_signs = 10;
+const unsigned int max_signs = 30;
 
 // ***** INDIVIDUAL STUFF *****
 
@@ -443,7 +443,7 @@ int main(int argc, char *argv[]) {
   for (gg=0;gg<50000;gg++) {
     std::cout << "GENERATION " << gg << std::endl;
     if (evals[rank.front()].fitness>fittest) {
-      print_signs(pop[rank.front()]);
+      //print_signs(pop[rank.front()]);
       sprintf(fn,"res_%u_%03u_%06u_%6.0f.csv",evals[rank.front()].n_trips,evals[rank.front()].n_signs,evals[rank.front()].n_bits,1e6*evals[rank.front()].fitness);
       save_signs(pop[rank.front()],fn);
       fittest = evals[rank.front()].fitness;
