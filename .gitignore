@@ -1,7 +1,7 @@
 *.o
 *.csv
 setup.txt
-log.txt
+log*.txt
 *.pyc
 simtest
 graytest
