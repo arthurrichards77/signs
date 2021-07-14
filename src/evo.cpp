@@ -82,7 +82,6 @@ evaluation eval(signset *st, unsigned long int num_steps) {
   s.run(num_steps);
   e.n_trips = s.total_trips();
 
-
   // store baseline if this is the empty signset
   if (e.n_signs==0) {
     baseline_eval = e;
@@ -90,10 +89,11 @@ evaluation eval(signset *st, unsigned long int num_steps) {
   }
 
   // maximize number of trips
+  e.fitness = 1.0*e.n_trips;
   // minimize number of signs
-  e.fitness = (e.n_trips*1.0/baseline_eval.n_trips);
-  if (alpha!=0.0) e.fitness *= pow(min_signs*1.0/(min_signs+e.n_signs),alpha);
-  if (beta!=0.0) e.fitness *= pow(min_signs*48.0/(min_signs*48.0+e.n_bits),beta);
+  if (alpha!=0.0) e.fitness -= alpha*e.n_signs;
+  // minimize number of bits per sign
+  if (beta!=0.0) e.fitness -= beta*e.n_bits;
 
   std::cout << s.total_trips() << " trips scoring " << e.fitness << std::endl;
 
