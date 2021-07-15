@@ -1,3 +1,7 @@
+# remove old results
+rm log*.txt
+rm res*.csv
+rm traveller.csv
 # build the scenario
 python make_setup.py > setup.txt
 # command for one run
