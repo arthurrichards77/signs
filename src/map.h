@@ -30,6 +30,7 @@ class Map {
   public:
     Map();
     void init_occ(ord,ord);
+    void reset_occ();
     Map(ord,ord);
     ~Map();
     ord get_xmax();
@@ -42,6 +43,7 @@ class Map {
     void print();
     void update();
     void add_sign(Sign);
+    void wipe_signs();
     bool check_move(aid,ord,ord,ord,ord,mv);
 };
 

@@ -105,8 +105,13 @@ void Map::init_occ(ord x, ord y) {
   // size of the Map
   xmax = x;
   ymax = y;
-  // empty occupancy grord
+  // empty occupancy grid
   occ = (bool*) malloc(sizeof(bool)*xmax*ymax);
+  memset(occ,false,sizeof(bool)*xmax*ymax);
+}
+
+void Map::reset_occ() {
+  // clear the occupancy grid
   memset(occ,false,sizeof(bool)*xmax*ymax);
 }
 
@@ -164,6 +169,10 @@ void Map::print() {
 
 void Map::add_sign(Sign s){
   signs.push_back(s);
+}
+
+void Map::wipe_signs() {
+  signs.clear();
 }
 
 bool Map::check_move(aid a, ord x, ord y, ord xd, ord yd, mv m) {

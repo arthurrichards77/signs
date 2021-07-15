@@ -86,6 +86,17 @@ aid Sim::read_agents() {
    return(num_agents);
 }
 
+aid Sim::reset() {
+    aid ii;
+    m.reset_occ();
+    m.wipe_signs();
+    for (ii=0;ii<agents.size();ii++) {
+      agents.at(ii).reset();
+    }
+    clock=0;
+    return(ii);
+}
+
 int Sim::read_signs(char *fn) {
    FILE * pFile;
    char buffer [100];

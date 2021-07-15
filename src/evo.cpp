@@ -24,6 +24,8 @@ bool random_choice(float prob_true) {
 
 typedef std::vector<Sign> signset;
 
+Sim s;
+
 // population size
 unsigned int pop_size=60;
 // lazy: keep population in a global
@@ -59,9 +61,8 @@ evaluation eval(signset *st, unsigned long int num_steps) {
 
   evaluation e;
 
-  // initialize simulator
-  Sim s;
-  s.read_agents();
+  // reset simulator
+  s.reset();
   // record problem dimensions
   e.n_agents = s.get_amax();
   e.x_max = s.get_xmax();
@@ -429,6 +430,10 @@ int main(int argc, char *argv[]) {
   char fn[100];
 
   process_command_line(argc, argv);
+  
+  // initialize simulator
+  s.read_agents();
+
 
   double fittest = 0.0;
 

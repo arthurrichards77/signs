@@ -6,6 +6,7 @@ Agent::Agent() {}
 
 Agent::Agent(Map *p_wrl,ord x, ord y) {
     p_map = p_wrl;
+    starting_location.set_xy(x,y);
     current_location.set_xy(x,y);
     p_map->take_occ(x,y);
     current_goal=0;
@@ -14,6 +15,7 @@ Agent::Agent(Map *p_wrl,ord x, ord y) {
 
 Agent::Agent(Map *p_wrl,Location loc) {
     p_map = p_wrl;
+    starting_location.set_xy(loc.x,loc.y);
     current_location.set_xy(loc.x,loc.y);
     p_map->take_occ(loc.x,loc.y);
     current_goal=0;
@@ -23,6 +25,7 @@ Agent::Agent(Map *p_wrl,Location loc) {
 Agent::Agent(Map *p_wrl,Location loc,aid set_id) {
     id = set_id;
     p_map = p_wrl;    
+    starting_location.set_xy(loc.x,loc.y);
     current_location.set_xy(loc.x,loc.y);
     p_map->take_occ(loc.x,loc.y);
     current_goal=0;
@@ -31,6 +34,14 @@ Agent::Agent(Map *p_wrl,Location loc,aid set_id) {
 
 aid Agent::get_id(){
     return(id);
+}
+
+void Agent::reset(){
+    current_location.set_xy(starting_location.x,starting_location.y);
+    p_map->take_occ(starting_location.x,starting_location.y);
+    current_goal=0;
+    num_trips=0;
+    goal.set_xy(goal_list.at(current_goal).x,goal_list.at(current_goal).y);
 }
 
 void Agent::move(ord x, ord y){

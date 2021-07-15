@@ -9,6 +9,7 @@
 class Agent {
     Map *p_map;
     aid id;
+    Location starting_location;
     void move(ord,ord);
     bool valid_move(Location);
     std::vector<Location> goal_list;
@@ -22,6 +23,7 @@ class Agent {
     Agent(Map *,Location,aid);
     Agent(Map *,ord,ord);
     aid get_id();
+    void reset();
     void set_goal(ord,ord);
     void add_goal(ord,ord);
     void update();
