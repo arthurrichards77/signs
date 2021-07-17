@@ -1,4 +1,5 @@
 from warnings import warn
+from math import ceil
 
 class SimBuilder:
 
@@ -53,8 +54,9 @@ class SimBuilder:
       warn("Could not spawn agent")
 
   def spread_agents_on_line(self,pos1,pos2,circuit,num_agents):
-    dx = (pos2[0]-pos1[0])/num_agents
-    dy = (pos2[1]-pos1[1])/num_agents
+    dx = ceil((pos2[0]-pos1[0])*1.0/num_agents) # the 1.0 is important for Python2/3 compatibility
+    dy = ceil((pos2[1]-pos1[1])*1.0/num_agents)
+    # warn("dx={}, dy={}".format(dx,dy))
     for ii in range(num_agents):
       self.make_agent((pos1[0]+ii*dx,pos1[1]+ii*dy),circuit)
 
