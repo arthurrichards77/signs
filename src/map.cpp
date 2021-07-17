@@ -49,10 +49,14 @@ ord Location::distance(Location other) {
   } else {
     dy = other.y-y;
   }
+// ONE NORM
+  return(dx+dy);
+// INF NORM
 //  if (dx>dy) {
-//    dy = dx;
+//    return(dx);
+//  } else {
+//    return(dy);
 //  }
-  return(dy+dx);
 }
 
 bool Location::eq(Location other) {

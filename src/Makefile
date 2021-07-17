@@ -1,28 +1,30 @@
+CC = g++ -Wall
+
 all: simtest graytest evo
 
 evo: evo.cpp map agent sign sim gray
-	g++ -o evo evo.cpp sign.o gray.o map.o sim.o agent.o
+	$(CC) -o evo evo.cpp sign.o gray.o map.o sim.o agent.o
 
 simtest: simtest.cpp map agent sign sim gray
-	g++ -o simtest simtest.cpp agent.o map.o sign.o gray.o sim.o
+	$(CC) -o simtest simtest.cpp agent.o map.o sign.o gray.o sim.o
 
 sim: sim.cpp sim.h types.h
-	g++ -c sim.cpp
+	$(CC) -c sim.cpp
 
 agent: agent.cpp agent.h types.h
-	g++ -c agent.cpp
+	$(CC) -c agent.cpp
 
 map: map.cpp map.h types.h
-	g++ -c map.cpp
+	$(CC) -c map.cpp
 
 sign: sign.cpp sign.h types.h
-	g++ -c sign.cpp
+	$(CC) -c sign.cpp
 
 graytest: graytest.c gray
-	g++ -o graytest graytest.c gray.o
+	$(CC) -o graytest graytest.c gray.o
 
 gray: gray.c gray.h
-	g++ -c gray.c
+	$(CC) -c gray.c
 
 clean:
 	rm *.o simtest graytest evo
