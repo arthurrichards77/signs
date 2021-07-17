@@ -13,8 +13,8 @@ class Agent {
     void move(ord,ord);
     bool valid_move(Location);
     std::vector<Location> goal_list;
-    int current_goal;
-    int num_trips;
+    unsigned int current_goal;
+    unsigned int num_trips;
   public:
     Location current_location;
     Location goal;
@@ -28,7 +28,7 @@ class Agent {
     void add_goal(ord,ord);
     void update();
     void print();
-    int get_num_trips();
+    unsigned int get_num_trips();
 };
 
 #endif

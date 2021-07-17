@@ -61,12 +61,11 @@ void Agent::add_goal(ord x, ord y){
 }
 
 void Agent::print() {
-    int jj;
     std::cout << "Agent " << id << " at " << current_location.x << "," << current_location.y << 
       " heading to " << goal.x << "," << goal.y << " after " << num_trips << " trips completed" << std::endl;
 }
 
-int Agent:: get_num_trips() {
+unsigned int Agent:: get_num_trips() {
     return(num_trips);
 }
 

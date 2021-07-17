@@ -103,14 +103,14 @@ evaluation eval(signset *st, unsigned long int num_steps) {
 }
 
 void print_signs2(signset *st) {
-  int ii;
+  unsigned int ii;
   for (ii=0;ii<st->size();ii++) {
     st->at(ii).print();
   }
 }
 
 void print_signs(signset *st) {
-  int ii;
+  unsigned int ii;
   char s[1000];
   for (ii=0;ii<st->size();ii++) {
     st->at(ii).c_str(s);
@@ -119,7 +119,7 @@ void print_signs(signset *st) {
 }
 
 void save_signs(signset *st, char *fn) {
-  int ii;
+  unsigned int ii;
   char s[1000];
   FILE *outfile;
   outfile = fopen(fn,"w");
@@ -253,7 +253,7 @@ unsigned int keepers=1;
 unsigned int newbies=1;
 
 void breed_pop() {
-  int p1,p2,ii;
+  unsigned int p1,p2,ii;
 
   for (ii=keepers;ii<pop_size-newbies;ii++) {
     p1 = rand() % keepers;
@@ -267,7 +267,7 @@ void breed_pop() {
 }
 
 void renew_pop() {
-  int ii;
+  unsigned int ii;
 
   for (ii=pop_size-newbies;ii<pop_size;ii++) {
     std::cout << "Replacing " << rank[ii] << "(" << evals[rank[ii]].fitness << ")"

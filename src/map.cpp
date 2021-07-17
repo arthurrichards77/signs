@@ -181,7 +181,7 @@ void Map::wipe_signs() {
 
 bool Map::check_move(aid a, ord x, ord y, ord xd, ord yd, mv m) {
   bool result;
-  int ii;
+  unsigned int ii;
 
   result = true;
 

@@ -174,7 +174,7 @@ aid Sim::print_status() {
 }
 
 int Sim::total_trips() {
-    int ii,n=0;
+    unsigned int ii,n=0;
 
     for (ii=0;ii<agents.size();ii++) {
       n+=agents.at(ii).get_num_trips();
