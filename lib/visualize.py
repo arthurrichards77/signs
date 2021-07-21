@@ -59,7 +59,7 @@ for x in range(mapsize[0]):
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
 
-cols = 'rgbcmyk'
+cols = 'rgbmyk'
 
 def animate(ii):
     ax1.clear()

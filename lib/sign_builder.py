@@ -29,7 +29,7 @@ def save_signs(signset,filename):
         for e in s:
             str = str + ',{}'.format(e) 
         print(str)  
-        f.write(str)
+        f.write(str + '\n')
     f.close()
     
 #m,p = make_mask(0,3,3)
