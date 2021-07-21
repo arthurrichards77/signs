@@ -37,6 +37,7 @@ y_goal=numpy.transpose([[row[5] for row in resdata if row[1]==ii] for ii in rang
 all_goals = set([(row[4],row[5]) for row in resdata])
 x_all_goals = [g[0] for g in all_goals]
 y_all_goals = [g[1] for g in all_goals]
+goal_list = [g for g in all_goals]
 
 x_sign = []
 y_sign = []
@@ -64,8 +65,10 @@ def animate(ii):
     ax1.clear()
     ax1.axis('equal')
     ax1.plot([-1, 1+mapsize[0], 1+mapsize[0], -1, -1],[-1, -1, 1+mapsize[1], 1+mapsize[1], -1],'r-')
-    ax1.plot(x_all_goals,y_all_goals,'gx')
+    for (i,g) in enumerate(goal_list):
+        ax1.plot(g[0],g[1],cols[i%7]+'x')
     ax1.plot(x_sign,y_sign,'c+')
+    ax1.plot(x_curr[ii-4:ii+1],y_curr[ii-4:ii+1],'k-')
     for jj in range(num_agents):
         for s in signdata:
              if (gray(x_curr[ii][jj])&s[2])^s[3]==0:
@@ -74,8 +77,9 @@ def animate(ii):
                    if (gray(y_goal[ii][jj])&s[8])^s[9]==0:
                      if (gray(jj)&s[0]^s[1])==0:
                        ax1.plot(x_curr[ii][jj],y_curr[ii][jj],'rs')
-    ax1.plot(x_curr[ii],y_curr[ii],'k.')
-    ax1.plot(x_curr[ii-4:ii+1],y_curr[ii-4:ii+1],'-')
+        colx = goal_list.index((x_goal[ii][jj],y_goal[ii][jj]))%7
+        col = cols[colx]
+        ax1.plot(x_curr[ii][jj],y_curr[ii][jj],col+'.')
 
 ani = animation.FuncAnimation(fig, animate, interval=50)
 plt.show()
