@@ -23,6 +23,13 @@ s3 = make_sign((0,0),
                (255,gray(5)),
                (2,2))
 
+s4 = make_sign((0,0),
+               make_mask(90,110,8),
+               (64,64),
+               (255,gray(120)),
+               (255,gray(120)),
+               (4,0))
+
 signs = [s1,s2,s3]
 
 for y in range(80,100):
@@ -39,6 +46,13 @@ for y in range(80,100):
                (255,gray(100)),
                (255,gray(100)),
                (2,2))
+    signs.append(s[:])
+    s = make_sign((0,0),
+               make_mask(98,99,8),
+               (255,gray(y)),
+               (255,gray(100)),
+               (255,gray(100)),
+               (4,0))
     signs.append(s[:])
     s = make_sign((0,0),
                make_mask(101,102,8),
@@ -69,6 +83,13 @@ for y in range(101,120):
                (255,gray(100)),
                (255,gray(100)),
                (2,0))
+    signs.append(s[:])
+    s = make_sign((0,0),
+               make_mask(101,102,8),
+               (255,gray(y)),
+               (255,gray(100)),
+               (255,gray(100)),
+               (4,4))
     signs.append(s[:])
     
 save_signs(signs,'manual_signs.csv')
