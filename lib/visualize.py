@@ -66,7 +66,7 @@ def animate(ii):
     ax1.axis('equal')
     ax1.plot([-1, 1+mapsize[0], 1+mapsize[0], -1, -1],[-1, -1, 1+mapsize[1], 1+mapsize[1], -1],'r-')
     for (i,g) in enumerate(goal_list):
-        ax1.plot(g[0],g[1],cols[i%7]+'x')
+        ax1.plot(g[0],g[1],cols[i%6]+'x')
     ax1.plot(x_sign,y_sign,'c+')
     ax1.plot(x_curr[ii-4:ii+1],y_curr[ii-4:ii+1],'k-')
     for jj in range(num_agents):
@@ -77,7 +77,7 @@ def animate(ii):
                    if (gray(y_goal[ii][jj])&s[8])^s[9]==0:
                      if (gray(jj)&s[0]^s[1])==0:
                        ax1.plot(x_curr[ii][jj],y_curr[ii][jj],'rs')
-        colx = goal_list.index((x_goal[ii][jj],y_goal[ii][jj]))%7
+        colx = goal_list.index((x_goal[ii][jj],y_goal[ii][jj]))%6
         col = cols[colx]
         ax1.plot(x_curr[ii][jj],y_curr[ii][jj],col+'.')
 
