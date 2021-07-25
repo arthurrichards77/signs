@@ -92,4 +92,4 @@ for y in range(101,120):
                (4,4))
     signs.append(s[:])
     
-save_signs(signs,'manual_signs.csv')
+save_signs(signs,'targeted_signs.csv')

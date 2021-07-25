@@ -10,11 +10,16 @@ def gray(x):
   return (x ^ (x>>1))
 
 if len(sys.argv)<2:
-  print("""visualize results.csv [signfile.csv]""")
+  print("""visualize results.csv [signfile.csv] [hide_signs]""")
   #exit()
   filename='result.csv'
 else:
   filename=sys.argv[1]
+
+if len(sys.argv)>3:
+  show_signs = False
+else:
+  show_signs = True
 
 resdata = []
 maxstep = 0
@@ -67,10 +72,12 @@ def animate(ii):
     ax1.plot([-1, 1+mapsize[0], 1+mapsize[0], -1, -1],[-1, -1, 1+mapsize[1], 1+mapsize[1], -1],'r-')
     for (i,g) in enumerate(goal_list):
         ax1.plot(g[0],g[1],cols[i%6]+'x')
-    ax1.plot(x_sign,y_sign,'c+')
+    if show_signs:
+        ax1.plot(x_sign,y_sign,'c+')
     ax1.plot(x_curr[ii-4:ii+1],y_curr[ii-4:ii+1],'k-')
     for jj in range(num_agents):
-        for s in signdata:
+        if show_signs:
+          for s in signdata:
              if (gray(x_curr[ii][jj])&s[2])^s[3]==0:
                if (gray(y_curr[ii][jj])&s[4])^s[5]==0:
                  if (gray(x_goal[ii][jj])&s[6])^s[7]==0:
