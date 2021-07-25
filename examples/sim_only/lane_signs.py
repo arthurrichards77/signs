@@ -80,6 +80,6 @@ s10 = make_sign((0,0),
                (0,0),
                (5,5)) 
 
-signs = [s1,s2,s3,s4,s5,s6,s7,s8,s9,s10]
+signs = [s1,s2,s3,s4,s5,s6,s7,s8] # 9 and 10 not used
     
 save_signs(signs,'lane_signs.csv')
