@@ -11,3 +11,5 @@ evo
 *.sh.o*
 *.gz
 results
+*.png
+*.mp4

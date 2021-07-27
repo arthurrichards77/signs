@@ -6,20 +6,21 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time
 
-def gray(x):
-  return (x ^ (x>>1))
+start_time = time.time()
 
-if len(sys.argv)<2:
-  print("""visualize results.csv [signfile.csv] [hide_signs]""")
-  #exit()
-  filename='result.csv'
+if len(sys.argv)<3:
+  print('{} resultfile outputfile [timestep]'.format(sys.argv[0]))
+  exit()
 else:
   filename=sys.argv[1]
-
+  outputfilename=sys.argv[2]
 if len(sys.argv)>3:
-  show_signs = False
+  time_step = int(sys.argv[3])
 else:
-  show_signs = True
+  time_step = None
+if len(sys.argv)>4:
+  print('{} resultfile outputfile [timestep]'.format(sys.argv[0]))
+  exit()
 
 resdata = []
 maxstep = 0
@@ -33,33 +34,27 @@ with open(filename, 'r') as csvfile:
 mapsize = resdata[0]
 resdata = resdata[1:]
 
-num_agents = max([row[1] for row in resdata])
+num_agents = 1+max([row[1] for row in resdata])
+num_frames = max([row[0] for row in resdata])
+
 x_curr=numpy.transpose([[row[2] for row in resdata if row[1]==ii] for ii in range(num_agents)])
 y_curr=numpy.transpose([[row[3] for row in resdata if row[1]==ii] for ii in range(num_agents)])
 x_goal=numpy.transpose([[row[4] for row in resdata if row[1]==ii] for ii in range(num_agents)])
 y_goal=numpy.transpose([[row[5] for row in resdata if row[1]==ii] for ii in range(num_agents)])
+n_trips=numpy.transpose([[row[6] for row in resdata if row[1]==ii] for ii in range(num_agents)])
+
+print(n_trips[-1][:])
+print(numpy.shape(x_goal))
+print(sum(n_trips[-1][:]))
 
 all_goals = set([(row[4],row[5]) for row in resdata])
 x_all_goals = [g[0] for g in all_goals]
 y_all_goals = [g[1] for g in all_goals]
 goal_list = [g for g in all_goals]
 
-x_sign = []
-y_sign = []
-signdata = []
-if len(sys.argv)>2:
-   signfile=sys.argv[2]
-   with open(signfile, 'r') as csvfile:
-       signreader = csv.reader(csvfile, delimiter=',')
-       for row in signreader:
-           signdata.append([int(v) for v in row[1:]])
-for x in range(mapsize[0]):
-  for y in range(mapsize[1]):
-    for s in signdata:
-      if (gray(x)&s[2])^s[3]==0:
-        if (gray(y)&s[4])^s[5]==0:
-          x_sign.append(x)
-          y_sign.append(y)
+op_time = time.time() - start_time
+print('Loading data took {} seconds.'.format(op_time))
+start_time = time.time()
 
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
@@ -67,26 +62,32 @@ ax1 = fig.add_subplot(1,1,1)
 cols = 'rgbmyk'
 
 def animate(ii):
+    if ii%100==0:
+        print('Rendering step {}'.format(ii))
     ax1.clear()
     ax1.axis('equal')
-    ax1.plot([-1, 1+mapsize[0], 1+mapsize[0], -1, -1],[-1, -1, 1+mapsize[1], 1+mapsize[1], -1],'r-')
+    ax1.plot([-1, mapsize[0], mapsize[0], -1, -1],[-1, -1, mapsize[1], mapsize[1], -1],'r-')
     for (i,g) in enumerate(goal_list):
         ax1.plot(g[0],g[1],cols[i%6]+'x')
-    if show_signs:
-        ax1.plot(x_sign,y_sign,'c+')
     ax1.plot(x_curr[ii-4:ii+1],y_curr[ii-4:ii+1],'k-')
+    total_trips = 0
     for jj in range(num_agents):
-        if show_signs:
-          for s in signdata:
-             if (gray(x_curr[ii][jj])&s[2])^s[3]==0:
-               if (gray(y_curr[ii][jj])&s[4])^s[5]==0:
-                 if (gray(x_goal[ii][jj])&s[6])^s[7]==0:
-                   if (gray(y_goal[ii][jj])&s[8])^s[9]==0:
-                     if (gray(jj)&s[0]^s[1])==0:
-                       ax1.plot(x_curr[ii][jj],y_curr[ii][jj],'rs')
         colx = goal_list.index((x_goal[ii][jj],y_goal[ii][jj]))%6
         col = cols[colx]
         ax1.plot(x_curr[ii][jj],y_curr[ii][jj],col+'.')
+        total_trips += n_trips[ii][jj]
+    plt.title('Step {} with {} trips completed.'.format(ii,total_trips))
 
-ani = animation.FuncAnimation(fig, animate, interval=50)
-plt.show()
+if time_step:
+  print('Saving snapshot {} to file {}'.format(time_step,outputfilename))
+  animate(time_step)
+  plt.savefig(outputfilename)
+else:
+  print('Saving animation of {} frames to file {}'.format(num_frames,outputfilename))
+  ani = animation.FuncAnimation(fig, animate, interval=50, frames=num_frames)
+  Writer = animation.writers['ffmpeg']
+  writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
+  ani.save(outputfilename, writer=writer)
+
+op_time = time.time() - start_time
+print('Visualization took {} seconds.'.format(op_time))

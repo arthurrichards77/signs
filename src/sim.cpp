@@ -161,19 +161,19 @@ aid Sim::print_status() {
     aid ii;
     if (out_file!=NULL) {
       for (ii=0;ii<agents.size();ii++) {
-//        fprintf(out_file,"%lu,%lu,%lu,%lu,%lu,%u\n", clock, 
-        fprintf(out_file,"%lu,%u,%u,%u,%u,%u\n", clock, 
+        fprintf(out_file,"%lu,%u,%u,%u,%u,%u,%u\n", clock, 
                                        agents.at(ii).get_id(),
                                      agents.at(ii).current_location.x,
                                      agents.at(ii).current_location.y,
                                      agents.at(ii).goal.x,
-                                     agents.at(ii).goal.y);
+                                     agents.at(ii).goal.y,
+                                     agents.at(ii).get_num_trips());
       }
     }
     return(ii);
 }
 
-int Sim::total_trips() {
+unsigned int Sim::total_trips() {
     unsigned int ii,n=0;
 
     for (ii=0;ii<agents.size();ii++) {
