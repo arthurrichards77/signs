@@ -43,10 +43,6 @@ x_goal=numpy.transpose([[row[4] for row in resdata if row[1]==ii] for ii in rang
 y_goal=numpy.transpose([[row[5] for row in resdata if row[1]==ii] for ii in range(num_agents)])
 n_trips=numpy.transpose([[row[6] for row in resdata if row[1]==ii] for ii in range(num_agents)])
 
-print(n_trips[-1][:])
-print(numpy.shape(x_goal))
-print(sum(n_trips[-1][:]))
-
 all_goals = set([(row[4],row[5]) for row in resdata])
 x_all_goals = [g[0] for g in all_goals]
 y_all_goals = [g[1] for g in all_goals]
