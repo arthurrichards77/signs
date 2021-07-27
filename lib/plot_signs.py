@@ -43,7 +43,7 @@ move_codes = [(-1,1),
               (-1,-1),
               (-1,0)]
 
-def plot_sign(s):
+def plot_sign(s, filename=None):
   
     print(s)
     fig = plt.figure()
@@ -58,8 +58,8 @@ def plot_sign(s):
                 if (gray(y)&s[4])^s[5]==0:
                        xs.append(x)
                        ys.append(y)
-    ax1.plot(xs,ys,'b+')
-    ax1.plot([-1, 1+mapsize[0], 1+mapsize[0], -1, -1],[-1, -1, 1+mapsize[1], 1+mapsize[1], -1],'r-')
+    ax1.plot(xs,ys,'b.',markersize=1)
+    ax1.plot([-1, mapsize[0], mapsize[0], -1, -1],[-1, -1, mapsize[1], mapsize[1], -1],'r-')
 
 
     ax2 = fig.add_subplot(2,2,2)    
@@ -72,8 +72,8 @@ def plot_sign(s):
                 if (gray(y)&s[8])^s[9]==0:
                        xs.append(x)
                        ys.append(y)
-    ax2.plot(xs,ys,'g+')
-    ax2.plot([-1, 1+mapsize[0], 1+mapsize[0], -1, -1],[-1, -1, 1+mapsize[1], 1+mapsize[1], -1],'r-')
+    ax2.plot(xs,ys,'g.',markersize=1)
+    ax2.plot([-1, mapsize[0], mapsize[0], -1, -1],[-1, -1, mapsize[1], mapsize[1], -1],'r-')
 
     ax3 = fig.add_subplot(2,2,3)    
     ids = []
@@ -90,11 +90,16 @@ def plot_sign(s):
     for m in range(8):
             if (gray(m)&s[10])^s[11]==0:
                        mvs.append(m)
-    ax4.plot([move_codes[m][0] for m in mvs],[move_codes[m][1] for m in mvs],'m+')
-    ax4.plot([-2, 2, 2, -2, -2],[-2, -2, 2, 2, -2],'r-')
-
+    ax4.plot([move_codes[m][0] for m in mvs],[move_codes[m][1] for m in mvs],'rx',
+             markersize=12)
+    ax4.plot([-1.5, 1.5, 1.5, -1.5, -1.5],[-1.5, -1.5, 1.5, 1.5, -1.5],'m-')
+    ax4.plot([-0.5, 0.5, 0.5, -0.5, -0.5],[-1.5, -1.5, 1.5, 1.5, -1.5],'m-')
+    ax4.plot([-1.5, 1.5, 1.5, -1.5, -1.5],[-0.5, -0.5, 0.5, 0.5, -0.5],'m-')
+    
+    if filename:
+      fig.savefig(filename)
                                               
-for s in signdata:
-    plot_sign(s)
-plt.show()
+for (i,s) in enumerate(signdata):
+    plot_sign(s,'{}.s{}.pdf'.format(filename,i))
+#plt.show()
 

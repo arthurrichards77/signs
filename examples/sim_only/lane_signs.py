@@ -65,21 +65,6 @@ s8 = make_sign((0,0),
                (0,0),
                (5,5)) 
 
-# if you get to the top, dumped to the corner
-s9 = make_sign((0,0),
-               (64,0), # 1XXX 
-               (255,gray(127)), # at the very top
-               (0,0),
-               (0,0),
-               (6,6)) 
-
-s10 = make_sign((0,0),
-               (64,0), # 1XXX 
-               (255,gray(127)), # at the very top
-               (0,0),
-               (0,0),
-               (5,5)) 
-
-signs = [s1,s2,s3,s4,s5,s6,s7,s8] # 9 and 10 not used
+signs = [s1,s2,s3,s4,s5,s6,s7,s8]
     
 save_signs(signs,'lane_signs.csv')
