@@ -25,14 +25,20 @@ with open(filename, 'r') as csvfile:
         signdata.append([int(v) for v in row[1:]])
 print('Loaded {} signs'.format(len(signdata)))
            
-x_max = max([s[2] for s in signdata])
-y_max = max([s[4] for s in signdata])
-xg_max = max([s[6] for s in signdata])
-yg_max = max([s[8] for s in signdata])
-a_max = max([s[0] for s in signdata])
+a_max = 0
+goals = set([])          
+with open('setup.txt', 'r') as setupfile:
+    setupreader = csv.reader(setupfile, delimiter=',')
+    for row in setupreader:
+        if row[0]=='W':
+            mapsize = (int(row[1]), int(row[2]))
+        elif row[0]=='A':
+            a_max = a_max + 1
+        elif row[0]=='G':
+            goals.add((int(row[1]), int(row[2])))
 
-mapsize = (128,128)
-a_max = 163
+gx = [g[0] for g in goals]
+gy = [g[1] for g in goals]
 
 move_codes = [(-1,1),
               (0,1),
@@ -51,7 +57,7 @@ def plot_sign(s, filename=None):
     ax1 = fig.add_subplot(2,2,1)
     xs = []
     ys = []
-    ax1.set_title('Pos: (X AND {}) XOR {}, (Y AND {}) XOR {}'.format(s[2],s[3],s[4],s[5]))
+    ax1.set_title('Position: $((x \cdot {}) \oplus {}=0)$ \n $ \wedge ((y \cdot {}) \oplus {}=0)$'.format(s[2],s[3],s[4],s[5]))
     for x in range(mapsize[0]):
         for y in range(mapsize[1]):
             if (gray(x)&s[2])^s[3]==0:
@@ -65,7 +71,7 @@ def plot_sign(s, filename=None):
     ax2 = fig.add_subplot(2,2,2)    
     xs = []
     ys = []
-    ax2.set_title('Goal: (X AND {}) XOR {}, (Y AND {}) XOR {}'.format(s[6],s[7],s[8],s[9]))
+    ax2.set_title('Goal: $((x_g \cdot {}) \oplus {}=0) $ \n $ \wedge ((y_g \cdot {}) \oplus {}=0)$'.format(s[6],s[7],s[8],s[9]))
     for x in range(mapsize[0]):
         for y in range(mapsize[1]):
             if (gray(x)&s[6])^s[7]==0:
@@ -73,20 +79,22 @@ def plot_sign(s, filename=None):
                        xs.append(x)
                        ys.append(y)
     ax2.plot(xs,ys,'g.',markersize=1)
+    ax2.plot(gx,gy,'k+')
     ax2.plot([-1, mapsize[0], mapsize[0], -1, -1],[-1, -1, mapsize[1], mapsize[1], -1],'r-')
+    
 
     ax3 = fig.add_subplot(2,2,3)    
     ids = []
-    ax3.set_title('Agent: (ID AND {}) XOR {}'.format(s[0],s[1]))
+    ax3.set_title('Agent: $(a \cdot {}) \oplus {}=0$'.format(s[0],s[1]))
     for a in range(a_max):
             if (gray(a)&s[0])^s[1]==0:
                        ids.append(a)
-    ax3.plot(ids,ids,'c+')
-    ax3.plot([-1,1+a_max],[-1,1+a_max],'r-')
+    ax3.plot(ids,[0 for i in ids],'c.',markersize=1)
+    ax3.plot([-1,a_max,a_max,-1,-1],[-1,-1,1,1,-1],'r-')
 
     ax4 = fig.add_subplot(2,2,4)    
     mvs = []
-    ax4.set_title('Move: (Code AND {}) XOR {}'.format(s[10],s[11]))
+    ax4.set_title('Move: $(m \cdot {}) \oplus {}=0$'.format(s[10],s[11]))
     for m in range(8):
             if (gray(m)&s[10])^s[11]==0:
                        mvs.append(m)
@@ -96,8 +104,11 @@ def plot_sign(s, filename=None):
     ax4.plot([-0.5, 0.5, 0.5, -0.5, -0.5],[-1.5, -1.5, 1.5, 1.5, -1.5],'m-')
     ax4.plot([-1.5, 1.5, 1.5, -1.5, -1.5],[-0.5, -0.5, 0.5, 0.5, -0.5],'m-')
     
+    fig.tight_layout(h_pad=1.0,w_pad = 1.0)
+    
     if filename:
-      fig.savefig(filename)
+      print('Saving to {}'.format(filename))
+      fig.savefig(filename,dpi=300)
                                               
 for (i,s) in enumerate(signdata):
     plot_sign(s,'{}.s{}.pdf'.format(filename,i))
