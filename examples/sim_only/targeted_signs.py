@@ -1,6 +1,6 @@
 import sys, os
 sys.path.append(os.getcwd()+'/../../lib')
-from sign_builder import make_mask, make_sign, save_signs, gray
+from sign_builder import make_mask, make_sign, save_signs, gray, make_masks_exact
 
 s1 = make_sign((0,0), # applies to everyone
                make_mask(115,125,8),
@@ -23,70 +23,67 @@ s3 = make_sign((0,0),
                (255,gray(5)),
                (2,2))
 
-s4 = make_sign((0,0),
-               make_mask(90,110,8),
-               (64,64),
-               (255,gray(120)),
-               (255,gray(120)),
-               (4,0))
-
 signs = [s1,s2,s3]
 
-for y in range(80,100):
+masks = make_masks_exact(80,99,8)
+
+for m in masks:
     s = make_sign((0,0),
                (255,gray(100)),
-               (255,gray(y)),
+               m,
                (255,gray(100)),
                (255,gray(100)),
                (7,gray(1)))
     signs.append(s[:])
     s = make_sign((0,0),
                make_mask(98,99,8),
-               (255,gray(y)),
+               m,
                (255,gray(100)),
                (255,gray(100)),
                (2,2))
     signs.append(s[:])
     s = make_sign((0,0),
                make_mask(98,99,8),
-               (255,gray(y)),
+               m,
                (255,gray(100)),
                (255,gray(100)),
                (4,0))
     signs.append(s[:])
     s = make_sign((0,0),
                make_mask(101,102,8),
-               (255,gray(y)),
+               m,
                (255,gray(100)),
                (255,gray(100)),
                (2,0))
     signs.append(s[:])
 
-for y in range(101,120):
+masks = make_masks_exact(101,119,8)
+
+for m in masks:
     s = make_sign((0,0),
                (255,gray(100)),
-               (255,gray(y)),
+               m,
                (255,gray(100)),
                (255,gray(100)),
                (7,gray(5)))
     signs.append(s[:])
     s = make_sign((0,0),
                make_mask(98,99,8),
-               (255,gray(y)),
+               m,
                (255,gray(100)),
                (255,gray(100)),
                (2,2))
     signs.append(s[:])
     s = make_sign((0,0),
                make_mask(101,102,8),
-               (255,gray(y)),
+               m,
                (255,gray(100)),
                (255,gray(100)),
                (2,0))
     signs.append(s[:])
     s = make_sign((0,0),
                make_mask(101,102,8),
-               (255,gray(y)),
+               m,
                (255,gray(100)),
                (255,gray(100)),
                (4,4))

@@ -13,6 +13,33 @@ def make_mask(start_value,end_value,num_bits):
         #print(mask,patt)
     return(mask,patt)
     
+def make_masks_exact(start_value,end_value,num_bits):
+    #print(start_value,end_value)
+    signs = set([])
+    mask = 2**num_bits - 1
+    patt = gray(start_value)
+    val_below = (start_value-1)%(2**num_bits)
+    val_above = (end_value+1)%(2**num_bits)
+    #print(val_above,val_below)
+    for ii in range(start_value,end_value):
+        mask_err = (gray(ii+1) & mask)^patt
+        new_mask = mask^mask_err
+        new_patt = patt&new_mask
+        if (gray(val_above) & new_mask)^new_patt == 0:
+            signs.add((mask,patt))
+            mask = 2**num_bits - 1
+            patt = gray(ii+1)
+        elif (gray(val_below) & new_mask)^new_patt == 0:
+            signs.add((mask,patt))
+            mask = 2**num_bits - 1
+            patt = gray(ii+1)
+        else:
+            mask = new_mask
+            patt = new_patt
+    signs.add((mask,patt))
+    return(signs)
+    
+    
 def make_sign(a_mask,x_mask,y_mask,xg_mask,yg_mask,mv_mask):
     s = [a_mask[0],a_mask[1],
          x_mask[0],x_mask[1],
@@ -32,5 +59,15 @@ def save_signs(signset,filename):
         f.write(str + '\n')
     f.close()
     
-#m,p = make_mask(0,3,3)
-
+if __name__=='__main__':
+    lower = 1
+    upper = 7
+    (mask,patt) = make_mask(lower,upper,4)
+    print(mask)
+    signs = make_masks_exact(lower,upper,4)
+    print(signs)
+    for ii in range(16):
+        print('{}: M:{} E:{}'.format(ii,
+                                     (gray(ii) & mask) ^ patt,
+                                     [(gray(ii) & m) ^ p for (m,p) in signs]))
+                                     
