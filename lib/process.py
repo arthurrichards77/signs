@@ -48,10 +48,10 @@ def process_files(filename_array, savefile=None):
 
     plot_spec = '.'
     for ii in range(pop_size):
-        axs[0, 0].plot([s[ii][0] for s in scores], plot_spec)
-        axs[0, 1].plot([s[ii][1] for s in scores], plot_spec)
-        axs[1, 0].plot([s[ii][2] for s in scores], plot_spec)
-        axs[1, 1].plot([s[ii][3] for s in scores], plot_spec)
+        axs[0, 0].plot([s[ii][0] for s in scores], plot_spec, ms=2)
+        axs[0, 1].plot([s[ii][1] for s in scores], plot_spec, ms=2)
+        axs[1, 0].plot([s[ii][2] for s in scores], plot_spec, ms=2)
+        axs[1, 1].plot([s[ii][3] for s in scores], plot_spec, ms=2)
 
     def average_trend(ii):
         return([sum([e[ii] for e in s])/pop_size for s in scores])
