@@ -26,7 +26,12 @@ Sign::Sign(const Sign &s){
 
 void Sign::mutate(int max_aid_bit,int max_ord_bit) {
   int r = rand();
-  if (r<RAND_MAX/6) agent_mask.mutate(max_aid_bit);
+  int aid_threshhold = RAND_MAX/6;
+  // max agent bits at zero indicates not using identity in signs
+  if (max_aid_bit==0) {
+    while (r<aid_threshhold) r = rand();
+  }
+  if (r<aid_threshhold) agent_mask.mutate(max_aid_bit);
   else if (r<RAND_MAX/3) xloc_mask.mutate(max_ord_bit);
   else if (r<RAND_MAX/2) yloc_mask.mutate(max_ord_bit);
   else if (r<(RAND_MAX/3)*2) xdst_mask.mutate(max_ord_bit);
