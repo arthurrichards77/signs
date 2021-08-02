@@ -50,7 +50,6 @@ unsigned int Mask<T>::num_bits() {
   return(res);
 }
 
-
 template <class T>
 bool Mask<T>::match (T u) {
   bool res = false;

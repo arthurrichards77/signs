@@ -50,6 +50,8 @@ std::vector<unsigned int> rank;
 const unsigned int min_signs = 10;
 const unsigned int max_signs = 30;
 
+bool use_identity = true;
+
 // ***** INDIVIDUAL STUFF *****
 
 // weight on number of signs
@@ -134,8 +136,15 @@ void save_signs(signset *st, char *fn) {
 }
 
 void add_random_sign(signset *st, aid amax, ord xmax, ord ymax) {
-  aid a1 = (aid) (rand() % amax); 
-  aid a2 = ((aid) (rand() % amax) & a1); 
+  aid a1,a2;
+  if (use_identity) {
+    a1 = (aid) (rand() % amax); 
+    a2 = ((aid) (rand() % amax) & a1);
+  }
+  else {
+    a1 = (aid) 0;
+    a2 = (aid) 0;
+  }
   ord x1 = (ord) (rand() % xmax); 
   ord x2 = ((ord) (rand() % xmax) & x1); 
   ord y1 = (ord) (rand() % ymax); 
@@ -166,7 +175,12 @@ void mutate_one_sign(signset *st) {
   int r;
   if (st->size()>0) {
     r = rand() % st->size();
-    st->at(r).mutate(8,7);
+    if (use_identity) {
+      st->at(r).mutate(8,7); //TODO: problem size hard coded here
+    }
+    else {
+      st->at(r).mutate(0,7);
+    }
   }
 }
 
@@ -380,8 +394,8 @@ void mutate_pop() {
 
 void process_command_line(int argc, char *argv[]) {
   int ii;
-  if (argc!=8) {
-    std::cout << argv[0] << " popsize probmut probsel probrep alpha beta probexch" << std::endl;
+  if (argc!=9) {
+    std::cout << argv[0] << " popsize probmut probsel probrep alpha beta probexch use_id" << std::endl;
     exit(1);
   }
   for (ii=0;ii<argc;ii++) {
@@ -420,6 +434,19 @@ void process_command_line(int argc, char *argv[]) {
   // exchange (traveller) probability
   sscanf(argv[7],"%f",&prob_exch);
   std::cout << "Probability of exchange: " << prob_exch << std::endl;
+  assert(prob_exch<=1.0);
+  assert(prob_exch>=0.0);
+  // optional switching off agent identity masking
+  int arg_use_identity;
+  sscanf(argv[8],"%i",&arg_use_identity);
+  if (arg_use_identity>=1) {
+    use_identity = true;
+    std::cout << "Signs CAN use identity" << std::endl;
+  }
+  else {
+    use_identity = false;
+    std::cout << "Signs CANNOT use identity" << std::endl;
+  }
   assert(prob_exch<=1.0);
   assert(prob_exch>=0.0);
 
