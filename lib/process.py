@@ -48,27 +48,39 @@ def process_files(filename_array, savefile=None):
 
     plot_spec = '.'
     for ii in range(pop_size):
-        axs[0, 0].plot([s[ii][0] for s in scores], plot_spec, ms=2)
-        axs[0, 1].plot([s[ii][1] for s in scores], plot_spec, ms=2)
-        axs[1, 0].plot([s[ii][2] for s in scores], plot_spec, ms=2)
-        axs[1, 1].plot([s[ii][3] for s in scores], plot_spec, ms=2)
+        axs[0, 0].plot([s[ii][0] for s in scores], plot_spec, ms=1)
+        axs[0, 1].plot([s[ii][1] for s in scores], plot_spec, ms=1)
+        axs[1, 0].plot([s[ii][2] for s in scores], plot_spec, ms=1)
+        axs[1, 1].plot([s[ii][3] for s in scores], plot_spec, ms=1)
 
     def average_trend(ii):
         return([sum([e[ii] for e in s])/pop_size for s in scores])
+
+    def max_trend(ii):
+        return([max([e[ii] for e in s]) for s in scores])
+
+    def min_trend(ii):
+        return([min([e[ii] for e in s]) for s in scores])
 
     axs[0, 0].plot(average_trend(0), 'k-')
     axs[0, 1].plot(average_trend(1), 'k-')
     axs[1, 0].plot(average_trend(2), 'k-')
     axs[1, 1].plot(average_trend(3), 'k-')
 
-    axs[0, 0].set_title('Signs')
-    axs[0, 1].set_title('Bits')
-    axs[1, 0].set_title('Trips')
-    axs[1, 1].set_title('Fitness')
+    axs[1, 1].plot(max_trend(3), 'k-')
+
+    axs[0, 0].set_ylabel('Signs')
+    axs[0, 1].set_ylabel('Bits')
+    axs[1, 0].set_ylabel('Trips')
+    axs[1, 1].set_ylabel('Fitness')
+    axs[1, 0].set_xlabel('Generation')
+    axs[1, 1].set_xlabel('Generation')
+
+    fig.tight_layout(w_pad = 1.0)
 
     if savefile:
         print('Saving plot to {}'.format(savefile))
-        fig.savefig(savefile, dpi=150)
+        fig.savefig(savefile, dpi=300)
     else:
         plt.show()
 
