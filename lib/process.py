@@ -80,7 +80,7 @@ def process_files(filename_array, savefile=None):
 
     if savefile:
         print('Saving plot to {}'.format(savefile))
-        fig.savefig(savefile, dpi=300)
+        fig.savefig(savefile, dpi=150)
     else:
         plt.show()
 
