@@ -1,6 +1,7 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=1
 #PBS -l walltime=24:00:00
+#PBS -N scenario2
 cd $PBS_O_WORKDIR
 echo "Array ID=${PBS_ARRAYID}"
 ARG_STR=$(head -n ${PBS_ARRAYID} params.txt | tail -1)
