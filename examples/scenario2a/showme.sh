@@ -1,5 +1,5 @@
 #!/bin/bash
-python make_setup.py > setup.txt
+#python make_setup.py > setup.txt
 ../../bin/simtest result.csv $1
 if [ -z $1 ]
 then
