@@ -7,8 +7,8 @@ simtest
 graytest
 evo
 *~
-*.sh.e*
-*.sh.o*
+*.e*
+*.o*
 *.gz
 results
 *.png
