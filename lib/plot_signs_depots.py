@@ -71,6 +71,7 @@ def plot_sign(s, filename=None):
                        ys.append(y)
     ax1.plot(xs,ys,'b.',markersize=1)
     ax1.plot([-1, mapsize[0], mapsize[0], -1, -1],[-1, -1, mapsize[1], mapsize[1], -1],'r-')
+    ax1.set_aspect('equal', 'box')
 
 
     ax2 = fig.add_subplot(1,3,2)    
@@ -86,6 +87,7 @@ def plot_sign(s, filename=None):
     ax2.plot(xs,ys,'g.',markersize=1)
     ax2.plot(gx,gy,'k+')
     ax2.plot([-1, mapsize[0], mapsize[0], -1, -1],[-1, -1, mapsize[1], mapsize[1], -1],'r-')
+    ax2.set_aspect('equal', 'box')
 
     ax4 = fig.add_subplot(1,3,3)    
     mvs = []
@@ -98,6 +100,7 @@ def plot_sign(s, filename=None):
     ax4.plot([-1.5, 1.5, 1.5, -1.5, -1.5],[-1.5, -1.5, 1.5, 1.5, -1.5],'m-')
     ax4.plot([-0.5, 0.5, 0.5, -0.5, -0.5],[-1.5, -1.5, 1.5, 1.5, -1.5],'m-')
     ax4.plot([-1.5, 1.5, 1.5, -1.5, -1.5],[-0.5, -0.5, 0.5, 0.5, -0.5],'m-')
+    ax4.set_aspect('equal', 'box')
     
     fig.tight_layout(h_pad=1.0,w_pad = 1.0)
     

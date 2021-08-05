@@ -74,7 +74,7 @@ def animate(ii):
         total_trips += n_trips[ii][jj]
     plt.title('Step {} with {} trips completed.'.format(ii,total_trips))
 
-if time_step:
+if time_step != None:
   print('Saving snapshot {} to file {}'.format(time_step,outputfilename))
   animate(time_step)
   plt.savefig(outputfilename)
