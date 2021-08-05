@@ -43,10 +43,12 @@ x_goal=numpy.transpose([[row[4] for row in resdata if row[1]==ii] for ii in rang
 y_goal=numpy.transpose([[row[5] for row in resdata if row[1]==ii] for ii in range(num_agents)])
 n_trips=numpy.transpose([[row[6] for row in resdata if row[1]==ii] for ii in range(num_agents)])
 
-all_goals = set([(row[4],row[5]) for row in resdata])
-x_all_goals = [g[0] for g in all_goals]
-y_all_goals = [g[1] for g in all_goals]
-goal_list = [g for g in all_goals]
+# initial_points = set([(x_curr[0][jj],y_curr[0][jj]) for jj in range(num_agents)])
+# all_goals = set([(row[4],row[5]) for row in resdata])
+# all_depots = all_goals.intersection(initial_points)
+# print('Identified {} depots'.format(len(all_depots)))
+# x_all_depots = [g[0] for g in all_depots]
+# y_all_depots = [g[1] for g in all_depots]
 
 op_time = time.time() - start_time
 print('Loading data took {} seconds.'.format(op_time))
@@ -63,14 +65,14 @@ def animate(ii):
     ax1.clear()
     ax1.axis('equal')
     ax1.plot([-1, mapsize[0], mapsize[0], -1, -1],[-1, -1, mapsize[1], mapsize[1], -1],'r-')
-    for (i,g) in enumerate(goal_list):
-        ax1.plot(g[0],g[1],cols[i%6]+'x')
+    #ax1.plot(x_all_depots,y_all_depots,'ks')
     ax1.plot(x_curr[ii-4:ii+1],y_curr[ii-4:ii+1],'k-')
     total_trips = 0
     for jj in range(num_agents):
-        colx = goal_list.index((x_goal[ii][jj],y_goal[ii][jj]))%6
+        colx = jj%6
         col = cols[colx]
         ax1.plot(x_curr[ii][jj],y_curr[ii][jj],col+'.')
+        ax1.plot(x_goal[ii][jj],y_goal[ii][jj],col+'x')
         total_trips += n_trips[ii][jj]
     plt.title('Step {} with {} trips completed.'.format(ii,total_trips))
 
