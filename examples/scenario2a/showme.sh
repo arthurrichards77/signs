@@ -3,7 +3,7 @@
 ../../bin/simtest result.csv $1
 if [ -z $1 ]
 then
-  filestub='nosigns'
+  filestub='${PWD##*/}_nosigns'
 else
   filestub="$1"
 fi

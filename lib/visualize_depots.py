@@ -22,6 +22,26 @@ if len(sys.argv)>4:
   print('{} resultfile outputfile [timestep]'.format(sys.argv[0]))
   exit()
 
+loc = None
+a_max = 0
+goals = set([])
+depots = set([])          
+with open('setup.txt', 'r') as setupfile:
+    setupreader = csv.reader(setupfile, delimiter=',')
+    for row in setupreader:
+        if row[0]=='W':
+            mapsize = (int(row[1]), int(row[2]))
+        elif row[0]=='A':
+            a_max = a_max + 1
+            if loc:
+                depots.add(loc)
+        elif row[0]=='G':
+            loc = (int(row[1]), int(row[2]))
+
+print('Identified {} depots'.format(len(depots)))
+gx = [g[0] for g in depots]
+gy = [g[1] for g in depots]
+
 resdata = []
 maxstep = 0
 
@@ -67,6 +87,7 @@ def animate(ii):
     ax1.plot([-1, mapsize[0], mapsize[0], -1, -1],[-1, -1, mapsize[1], mapsize[1], -1],'r-')
     #ax1.plot(x_all_depots,y_all_depots,'ks')
     ax1.plot(x_curr[ii-4:ii+1],y_curr[ii-4:ii+1],'k-')
+    ax1.plot(gx, gy, 'co', ms=20)
     total_trips = 0
     for jj in range(num_agents):
         colx = jj%6
